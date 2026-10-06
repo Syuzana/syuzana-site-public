@@ -1,0 +1,36 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "syuzana-site",
+  "main": "src/index.tsx",
+  "compatibility_date": "2026-08-22",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Static files (CSS, favicon) are served from here before the Worker runs.
+  "assets": { "directory": "./public", "binding": "ASSETS" },
+
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+
+  // The site is reachable only on its custom domain; no *.workers.dev or preview URLs.
+  "workers_dev": false,
+  "preview_urls": false,
+
+  // Non-secret config. Secrets (ACCESS_*, ADMIN_EMAIL, CONTACT_WEBHOOK_URL, TELEGRAM_*)
+  // are set with `wrangler secret put`; see .dev.vars.example for the full list.
+  "vars": { "ENVIRONMENT": "production" },
+
+  // Editable site text, RU + EN. Run `wrangler d1 create syuzana-site-content` once and
+  // paste the returned id here before the first deploy.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "syuzana-site-content",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  // CV PDF and photo. Run `wrangler r2 bucket create syuzana-site-assets` once.
+  "r2_buckets": [{ "binding": "ASSETS_BUCKET", "bucket_name": "syuzana-site-assets" }],
+
+  "routes": [{ "pattern": "syuzana.com", "custom_domain": true }]
+}

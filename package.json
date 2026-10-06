@@ -1,0 +1,28 @@
+{
+  "name": "syuzana-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Personal site of Syuzana Tevdoradze — Cloudflare Worker (Hono) + D1 + R2 + Access",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "types": "wrangler types",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "seed:build": "node scripts/build-seed.mjs",
+    "db:migrate:local": "wrangler d1 migrations apply syuzana-site-content --local",
+    "db:migrate:remote": "wrangler d1 migrations apply syuzana-site-content --remote",
+    "publish:public": "bash scripts/publish-public.sh"
+  },
+  "dependencies": {
+    "hono": "^4",
+    "jose": "^6"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.22.0",
+    "typescript": "^5",
+    "vitest": "^4.1.11",
+    "wrangler": "^4"
+  }
+}

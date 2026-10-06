@@ -1,0 +1,30 @@
+# OS / editor
+.DS_Store
+
+# Secrets & local env (never committed)
+.env
+.env.*
+.dev.vars
+.mcp.json*
+*.local
+
+# Sensitive sources — CV, photo, contact handles, raw research.
+# These never enter git in any repo; at runtime they live in R2 / D1 / Worker secrets.
+/research/
+
+# Raw binary sources dropped into the knowledge base (portraits, scans) — never committed.
+knowledge/sources/
+
+# Runtime data (content snapshots, captured submissions, exports)
+/data/
+
+# Build & dependencies
+node_modules/
+dist/
+.wrangler/
+coverage/
+*.log
+
+# Archives / Finder artifacts (e.g. a zipped specs/ folder)
+*.zip
+__MACOSX/
