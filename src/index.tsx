@@ -121,7 +121,7 @@ app.get("/:lang{(?:ru|en)}", async (c: AppContext) => {
   const sentParam = c.req.query("sent");
   const sent = sentParam === "ok" || sentParam === "error" ? sentParam : undefined;
   const formEnabled = Boolean(c.env.CONTACT_WEBHOOK_URL?.trim());
-  return page(c, <HomePage c={content} lang={lang} path={`/${lang}/`} hasPhoto={photo !== null} hasCv={cv !== null} formEnabled={formEnabled} sent={sent} />);
+  return page(c, <HomePage c={content} lang={lang} path={`/${lang}/`} hasPhoto={photo !== null} hasCv={cv !== null} formEnabled={formEnabled} sent={sent} origin={new URL(c.req.url).origin} />);
 });
 
 app.get("/:lang{(?:ru|en)}/privacy", async (c: AppContext) => {

@@ -104,7 +104,7 @@ a:hover { color: var(--link-hover); }
    up in a column stays ragged-right and unhyphenated. */
 h1, h2, h3, .kicker, .note, .meta, .group-title, label, .btn, th, td,
 summary, .channel-label, .channel-value, .what, .site-header, .site-footer,
-.chip, .flash, caption, .admin { text-align: left; hyphens: manual; }
+.chip, .flash, caption, .admin, .vcard p, .site-footer p { text-align: left; hyphens: manual; }
 
 /* ------------------------------------------------------------------ type */
 
@@ -216,6 +216,24 @@ section[id] { scroll-margin-top: 1rem; }
 }
 .lang-toggle:hover { background: var(--fg); color: var(--bg); border-color: var(--fg); }
 
+/* EN | RU as one control: the current language is shown, not offered. */
+.lang-pair { display: flex; margin-left: auto; }
+.lang-current, .lang-toggle {
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: 1px solid var(--rule-firm);
+  padding: 0 0.85rem;
+  min-height: 36px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.lang-current { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.lang-pair .lang-toggle { border-left: 0; }
+
 /* ------------------------------------------------------------------ card */
 
 .hero { padding: clamp(2rem, 5vw, 3.25rem) 0 0; }
@@ -286,6 +304,18 @@ section[id] { scroll-margin-top: 1rem; }
 .channel-label { flex: 0 0 6rem; font-size: var(--text-label); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fg-soft); }
 .channel-value { flex: 1; min-width: 0; overflow-wrap: anywhere; font-family: var(--serif); font-size: 1.125rem; }
 .channel-go { color: var(--fg-soft); }
+
+/* ------------------------------------------------------------ vCard code */
+
+.vcard { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
+/* The tile stays light in both themes: inverted codes fail on many scanners. */
+.qr { flex: 0 0 auto; width: 112px; height: 112px; border: 1px solid var(--rule-firm); background: #f3eee6; display: block; }
+.vcard p { margin: 0; font-size: var(--text-meta); color: var(--fg-soft); max-width: 28ch; }
+.vcard b { display: block; color: var(--fg); }
+
+/* A closing action after the form, so the page ends on something to do. */
+.closing { margin-top: 1.75rem; padding-top: 1.5rem; border-top: 1px solid var(--rule-firm); }
+.closing .note { display: block; margin-top: 0.6rem; }
 
 /* ------------------------------------------------- lists, cards, results */
 

@@ -75,20 +75,24 @@ describe("public pages render from D1", () => {
     expect(res.headers.get("Location")).toBe("/en/#pricing");
     expect((await request("/ru/about/", { redirect: "manual" })).headers.get("Location")).toBe("/ru/#experience");
   });
-  it("leads with the name and role — it is a business card", async () => {
+  it("leads with the name, the role and the positioning line — it is a business card", async () => {
     const html = await (await request("/ru/")).text();
     expect(html).toContain("<h1>Сюзана Тевдорадзе</h1>");
     expect(html).toContain("Technical Product Owner");
-    // Cards carry result and timeline, never a price; four-digit sums appear nowhere.
-    expect(html).toContain("Что нужно от вас");
+    expect(html).toContain("Стратегия и развитие AI-продуктов");
+    // No package totals anywhere: the page prices by rate and hours.
     expect(html).not.toMatch(/€\s?\d\s?\d{3}/);
-
   });
-  it("shows three format cards in two groups: project work, then the team", async () => {
+  it("is the card and three sections — the formats page is not part of it", async () => {
     const html = await (await request("/en/")).text();
-    expect(html.match(/class="card"/g)?.length).toBe(3);
-    expect(html.indexOf("Project work")).toBeLessThan(html.indexOf("Work inside the team"));
-    expect(html.indexOf("Assessment of a new product")).toBeLessThan(html.indexOf("Part-time product lead"));
+    for (const id of ["experience", "pricing", "contact"]) {
+      expect(html).toContain(`id="${id}"`);
+    }
+    for (const id of ["situations", "formats", "process"]) {
+      expect(html).not.toContain(`id="${id}"`);
+    }
+    // The copy still lives in D1; it is simply not rendered on the card.
+    expect(html).not.toContain("Work inside the team");
   });
   it("prices by rate and hours, not by package totals", async () => {
     const html = await (await request("/en/")).text();
@@ -182,7 +186,7 @@ describe("admin gate (fails closed)", () => {
     const row = html.indexOf('class="channels"');
     expect(row).toBeGreaterThan(-1);
     // Contact-first: the channels come before the first section below the card.
-    expect(row).toBeLessThan(html.indexOf('id="situations"'));
+    expect(row).toBeLessThan(html.indexOf('id="experience"'));
     expect(html).toContain("mailto:me@example.com");
     // Each row is labelled, so the value is never the only thing read out.
     expect(html).toContain('class="channel-label"');

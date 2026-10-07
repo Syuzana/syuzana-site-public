@@ -2,6 +2,7 @@ import type { FC } from "hono/jsx";
 import type { Content } from "../content";
 import type { Lang } from "../i18n";
 import { escapeHtml, listItems, renderInline } from "../render";
+import { qrSvg, vcard } from "../vcard";
 import { Inline, Layout, SectionHead, Text, link, placeholders } from "./layout";
 
 type Props = { c: Content; lang: Lang; path: string };
@@ -57,6 +58,20 @@ function hostPath(href: string): string {
     return href;
   }
 }
+
+/** The vCard code: the one thing on the card that works when the screen is someone else's. */
+const VCard: FC<{ c: Content; origin: string }> = ({ c, origin }) => {
+  if (!c.value("contacts.email")) return null;
+  return (
+    <div class="vcard">
+      <div dangerouslySetInnerHTML={{ __html: qrSvg(vcard(c, origin), c.get("card.qr_title")) }} />
+      <p>
+        <b>{c.get("card.qr_title")}</b>
+        {c.get("card.qr_note")}
+      </p>
+    </div>
+  );
+};
 
 /** A result reads as an entry, not a bullet: a crimson dateline, then the number. */
 const Results: FC<{ c: Content }> = ({ c }) => {
@@ -172,145 +187,85 @@ const ContactForm: FC<{ c: Content; lang: Lang }> = ({ c, lang }) => (
   </form>
 );
 
-export type HomeProps = Props & { hasPhoto: boolean; hasCv: boolean; formEnabled: boolean; sent?: "ok" | "error" };
+export type HomeProps = Props & { hasPhoto: boolean; hasCv: boolean; formEnabled: boolean; sent?: "ok" | "error"; origin: string };
 
 /** The whole site is one page: a business card first, then everything a visitor scrolls for. */
-export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, formEnabled, sent }) => {
-  const email = c.value("contacts.email");
-  return (
-    <Layout c={c} lang={lang} path={path} title={`${c.get("site.name")} — ${c.get("site.role")}`}>
-      <section class="hero" id="top">
-        <div class="wrap card-grid">
-          {hasPhoto ? (
-            <img class="portrait card-portrait" src="/assets/photo" alt={c.get("site.name")} width="720" height="960" fetchpriority="high" />
-          ) : null}
-          <div class="card-id">
-            <p class="kicker">{c.get("hero.role")}</p>
-            <h1>{c.get("site.name")}</h1>
-          </div>
+export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, formEnabled, sent, origin }) => (
+  <Layout c={c} lang={lang} path={path} title={`${c.get("site.name")} — ${c.get("site.role")}`}>
+    <section class="hero" id="top">
+      <div class={`wrap card-grid${hasPhoto ? "" : " no-photo"}`}>
+        {hasPhoto ? (
+          <img class="portrait card-portrait" src="/assets/photo" alt={c.get("site.name")} width="720" height="960" fetchpriority="high" />
+        ) : null}
+        <div class="card-id">
+          <p class="kicker">{c.get("hero.role")}</p>
+          <h1>{c.get("site.name")}</h1>
+          <p class="role">{c.get("hero.title")}</p>
         </div>
-        <div class="wrap">
-          <p class="tagline">
-            <Inline c={c} k="hero.title" />
-          </p>
-          <p class="lead">
-            <Inline c={c} k="about.bio" />
-          </p>
-          <div class="actions two">
-            <BookButton c={c} lang={lang} labelKey="hero.cta" />
-            {hasCv ? (
-              <a class="btn secondary" href="/cv.pdf">
-                {c.get("about.cv_label")}
-              </a>
-            ) : null}
-          </div>
-          <p class="note">{c.get("hero.note")}</p>
-          <ContactList c={c} />
-        </div>
-      </section>
-
-      <section class="section tint" id="situations">
-        <div class="wrap">
-          <SectionHead c={c} titleKey="problems.title" />
-          <div class="problems">
-            <Text c={c} k="problems.items" />
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="formats">
-        <div class="wrap">
-          <SectionHead c={c} titleKey="formats.title" />
-          <p class="lead">
-            <Inline c={c} k="formats.intro" />
-          </p>
-          <h3 class="group-title">{c.get("formats.group_project")}</h3>
-          <div class="cards">
-            {PROJECT_FORMATS.map((id) => (
-              <FormatCard c={c} id={id} />
-            ))}
-          </div>
-          <h3 class="group-title">{c.get("formats.group_team")}</h3>
-          <div class="cards cards-one">
-            {TEAM_FORMATS.map((id) => (
-              <FormatCard c={c} id={id} />
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      <section class="section tint" id="process">
-        <div class="wrap">
-          <SectionHead c={c} titleKey="process.title" />
-          <div class="one-list">
-            <Text c={c} k="process.steps" />
-            <Text c={c} k="process.principles" />
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="experience">
-        <div class="wrap">
-          <SectionHead c={c} titleKey="experience.title" />
-          <p class="lead">
-            <Inline c={c} k="experience.intro" />
-          </p>
-          <Results c={c} />
-          <p class="note mt">
-            <Inline c={c} k="experience.types" />
-          </p>
+      </div>
+      <div class="wrap">
+        <p class="tagline">
+          <Inline c={c} k="about.bio" />
+        </p>
+        <div class="actions two">
+          <BookButton c={c} lang={lang} labelKey="hero.cta" />
           {hasCv ? (
-            <p>
-              <a class="btn secondary" href="/cv.pdf">
-                {c.get("about.cv_label")}
-              </a>
-            </p>
+            <a class="btn secondary" href="/cv.pdf">
+              {c.get("about.cv_label")}
+            </a>
           ) : null}
         </div>
-      </section>
+        <p class="note">{c.get("hero.note")}</p>
+        <ContactList c={c} />
+        <VCard c={c} origin={origin} />
+      </div>
+    </section>
 
-      <section class="section tint" id="pricing">
-        <div class="wrap">
-          <SectionHead c={c} titleKey="pricing.title" />
-          <Text c={c} k="pricing.intro" />
-          <div class="table-wrap">
-            <PricingTable c={c} />
-          </div>
-          <p class="note mt">
-            <Inline c={c} k="pricing.note" />
-          </p>
-        </div>
-      </section>
+    <section class="section" id="experience">
+      <div class="wrap">
+        <SectionHead c={c} titleKey="experience.title" />
+        <p class="note">
+          <Inline c={c} k="experience.types" />
+        </p>
+        <Results c={c} />
+        <p class="note mt">
+          <Inline c={c} k="experience.intro" />
+        </p>
+      </div>
+    </section>
 
-      <section class="section" id="contact">
-        <div class="wrap cols">
-          <div>
-            <SectionHead c={c} titleKey="contact.title" />
-            <Text c={c} k="contact.body" />
-            <div class="actions">
-              <BookButton c={c} lang={lang} labelKey="contact.booking_label" />
-            </div>
-            {email ? (
-              <p class="mt">
-                {c.get("contact.email_label")}: <a href={`mailto:${email}`}>{email}</a>
-              </p>
-            ) : null}
-          </div>
-          {/* The form only appears once a delivery webhook is configured: a form that goes nowhere is worse than none. */}
-          {formEnabled ? (
-            <div>
-              <h3>{c.get("contact.form_title")}</h3>
-              {sent === "ok" ? <p class="flash ok">{c.get("contact.form_ok")}</p> : null}
-              {sent === "error" ? <p class="flash error">{c.get("contact.form_error")}</p> : null}
-              <ContactForm c={c} lang={lang} />
-            </div>
-          ) : null}
+    <section class="section" id="pricing">
+      <div class="wrap">
+        <SectionHead c={c} titleKey="pricing.title" />
+        <Text c={c} k="pricing.intro" />
+        <div class="table-wrap">
+          <PricingTable c={c} />
         </div>
-      </section>
-    </Layout>
-  );
-};
+        <p class="note mt">
+          <Inline c={c} k="pricing.note" />
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="wrap">
+        <SectionHead c={c} titleKey="contact.title" />
+        <Text c={c} k="contact.body" />
+        {formEnabled ? (
+          <>
+            {sent === "ok" ? <p class="flash ok">{c.get("contact.form_ok")}</p> : null}
+            {sent === "error" ? <p class="flash error">{c.get("contact.form_error")}</p> : null}
+            <ContactForm c={c} lang={lang} />
+          </>
+        ) : null}
+        <div class="closing">
+          <BookButton c={c} lang={lang} labelKey="hero.cta" />
+          <p class="note">{c.get("hero.note")}</p>
+        </div>
+      </div>
+    </section>
+  </Layout>
+);
 
 export const PrivacyPage: FC<Props> = ({ c, lang, path }) => (
   <Layout c={c} lang={lang} path={path} title={`${c.get("privacy.title")} — ${c.get("site.name")}`}>

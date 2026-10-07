@@ -41,6 +41,8 @@
   "experience.items": "- AI monitoring for greenhouses: of more than ten detection models we kept the four that worked and rebuilt labelling. Average production accuracy went from 0.6 to 0.9, manual annotation fell by about 95%.\n- Multi-tenant infrastructure: a move to shared services cut cloud cost per customer by roughly 10x and turned the unit economics positive.\n- Government analytics: an NLP system for 200–250 thousand citizen requests a year, doing classification, entity extraction and routing. Processing became about 5x faster, with a person making the final call.\n- Mobility data: moving from row-based to vector-based storage took a report from about three days to an hour and a half.",
   "experience.types": "Most often this is computer vision and NLP in production, data platforms, legacy systems and the economics of early-stage AI products.",
   "about.bio": "I'm a product lead with a technical background. I help find the product's focus and decide whether it is worth doing. I research its value, the market, the audience and the competition. I work out whether the product pays back, and define how it should be built. I write the growth strategy and see development through to launch.",
+  "card.qr_title": "Scan to save my contact",
+  "card.qr_note": "Opens a vCard on the phone, no typing needed. Useful when this page is on a screen someone else is looking at.",
   "about.cv_label": "Download CV (PDF)",
   "pricing.title": "Pricing",
   "pricing.intro": "The rate is **from €100 an hour**, single tasks from two hours. Project scope is estimated in hours up front and fixed in writing.",

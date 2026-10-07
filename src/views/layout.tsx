@@ -104,17 +104,14 @@ export const Layout: FC<PageProps> = ({ c, lang, path, title, description, child
       <body>
         <header class="site-header">
           <div class="wrap">
-            <a class="wordmark" href={`/${lang}/`}>
-              syuzana.com
-            </a>
-            <nav class="nav" aria-label="Main">
-              {NAV.map(([anchor, labelKey]) => (
-                <a href={`/${lang}/#${anchor}`}>{c.get(labelKey)}</a>
-              ))}
-            </nav>
-            <a class="lang-toggle" href={switchLangPath(path, other)} hreflang={other} lang={other}>
-              {other.toUpperCase()}
-            </a>
+            <div class="lang-pair" role="group" aria-label="Language">
+              <span class="lang-current" aria-current="true" lang={lang}>
+                {lang.toUpperCase()}
+              </span>
+              <a class="lang-toggle" href={switchLangPath(path, other)} hreflang={other} lang={other}>
+                {other.toUpperCase()}
+              </a>
+            </div>
           </div>
         </header>
         <main>{children}</main>
@@ -138,15 +135,6 @@ export const Layout: FC<PageProps> = ({ c, lang, path, title, description, child
               ) : null}
               {c.value("contacts.email") ? <a href={`mailto:${c.value("contacts.email")}`}>{c.value("contacts.email")}</a> : null}
             </div>
-            {link(c, "contacts.channel") ? (
-              <section class="channel-block" aria-label={c.get("footer.channel_title")}>
-                <h3>{c.get("footer.channel_title")}</h3>
-                <Text c={c} k="footer.channel_body" />
-                <a class="btn secondary" href={link(c, "contacts.channel")} rel="noopener">
-                  {c.get("footer.channel_cta")}
-                </a>
-              </section>
-            ) : null}
             <p class="note">
               © {new Date().getUTCFullYear()} {c.get("site.name")} · <a href={`/${lang}/privacy`}>{c.get("footer.privacy_label")}</a> ·{" "}
               <a href="#top" class="to-top" aria-label="Top">↑</a>
