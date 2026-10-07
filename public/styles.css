@@ -19,16 +19,21 @@
   --serif: "PT Serif", Georgia, "Times New Roman", serif;
   --sans: "PT Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
-  --measure: 68ch;
+  --measure: 72ch;
+  --card-measure: 48rem;   /* one fixed width for the card: ch varies with font-size */
   --gutter: 16px;
   --radius: 10px;
 
+  /* Vertical rhythm on an 8px base. A section break is the largest step: under
+     ~64px on a phone the sections read as one wall of text. */
+  --space-section: clamp(4rem, 8vw, 7rem);   /* 64px phone -> 112px desktop */
+
   /* One type scale for the whole page. Body copy is the default (set on <body>);
      everything else below is a deliberate exception, not a per-block one-off. */
-  --text: 1rem;                               /* every sentence on the page: the 16px browser default */
-  --text-lead: clamp(1.15rem, 2vw, 1.3rem);   /* the hero lead, under the name */
-  --text-meta: 0.9rem;                        /* secondary meta, always --fg-soft */
-  --text-label: 0.8rem;                       /* uppercase micro-labels */
+  --text: 1.125rem;                            /* every sentence on the page: 18px */
+  --text-lead: clamp(1.25rem, 2.2vw, 1.5rem);  /* the hero lead: 20px phone -> 24px desktop */
+  --text-meta: 1rem;                           /* secondary meta, always --fg-soft */
+  --text-label: 0.8125rem;                     /* uppercase micro-labels */
 
   /* Crimson fills a button at any brightness, but as link text it has to lift off
      a charcoal background — hence a separate link token the dark theme overrides. */
@@ -37,6 +42,10 @@
   --band-bg: var(--ink);
   --band-fg: var(--cream);
   --band-accent: #e8a0a8;
+
+  /* Alternating section surface: without it the page has no way to show where
+     one block ends and the next begins. Cards in a tinted section flip to --bg. */
+  --tint: #ece5d9;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -50,6 +59,7 @@
     --link-hover: #f2949b;
     --band-bg: #2a2524;
     --band-fg: #f3eee6;
+    --tint: #241f1e;
   }
 }
 :root[data-theme="dark"] {
@@ -62,6 +72,7 @@
   --link-hover: #f2949b;
   --band-bg: #2a2524;
   --band-fg: #f3eee6;
+  --tint: #241f1e;
 }
 
 * { box-sizing: border-box; }
@@ -72,7 +83,7 @@ body {
   color: var(--fg);
   font-family: var(--sans);
   font-size: var(--text);
-  line-height: 1.6;
+  line-height: 1.65;
 }
 img { max-width: 100%; height: auto; display: block; }
 a { color: var(--link); text-decoration-thickness: 1px; text-underline-offset: 2px; }
@@ -80,9 +91,9 @@ a:hover { color: var(--link-hover); }
 :focus-visible { outline: 3px solid var(--link); outline-offset: 2px; }
 
 h1, h2, h3 { font-family: var(--serif); font-weight: 700; line-height: 1.15; margin: 0 0 0.5em; letter-spacing: -0.01em; }
-h1 { font-size: clamp(2.2rem, 5vw, 3.8rem); }
-h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
-h3 { font-size: clamp(1.2rem, 2vw, 1.45rem); }
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); }      /* 32px phone -> 56px desktop */
+h2 { font-size: clamp(1.75rem, 3.2vw, 2.5rem); } /* 28px -> 40px */
+h3 { font-size: clamp(1.4rem, 2.2vw, 1.75rem); } /* 22px -> 28px */
 p, li { max-width: var(--measure); }
 p { margin: 0 0 1em; }
 ul { padding-left: 1.2em; margin: 0 0 1em; }
@@ -101,26 +112,52 @@ strong { font-weight: 700; }
 .lang-toggle { border: 1px solid var(--border); border-radius: 999px; padding: 0.2rem 0.7rem; font-size: 0.85rem; text-decoration: none; color: var(--fg); }
 
 /* Section header: kicker → heading → short crimson rule */
-.section { padding: clamp(2.5rem, 6vw, 5rem) 0; }
+.section { padding: var(--space-section) 0; }
+/* Alternating surface, so the eye can see where one section ends and the next starts. */
+.section.tint { background: var(--tint); }
+.section.tint .card { background: var(--bg); }
 .kicker { font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: var(--text-label); color: var(--link); margin: 0 0 0.6rem; }
 .rule { width: 3rem; height: 3px; background: var(--link); border: 0; margin: 0.8rem 0 1.4rem; }
 /* A lead is ordinary body copy everywhere but the hero, where it sits under the name. */
 .lead { color: var(--fg); }
-.hero .lead { font-size: var(--text-lead); }
+.hero .lead { font-size: var(--text-lead); max-width: var(--card-measure); margin: 0.7rem 0 0; }
 .note { color: var(--fg-soft); font-size: var(--text-meta); }
 .mt { margin-top: 1.2rem; }
 .inline-form { display: inline; }
 
-/* Hero — the business card: role, name, portrait */
+/* ---------- The card: portrait, name, one line, two actions, five channels ---------- */
+.card-grid { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: clamp(1.1rem, 4vw, 1.75rem); align-items: start; }
+.card-grid.no-photo, .wrap.card-grid:not(:has(.card-portrait)) { grid-template-columns: 1fr; }
+.card-portrait { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 20%; border-radius: 0; }
+.card-id .kicker { line-height: 1; padding-top: 2px; margin-bottom: 0.45rem; }
+.card-id h1 { margin: 0; line-height: 1.02; }
+
+.hero .tagline { margin: 1.1rem 0 0; max-width: var(--card-measure); }
+.hero .actions.two { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1.4rem; align-items: stretch; max-width: var(--card-measure); }
+.hero .actions.two .btn { display: inline-flex; align-items: center; justify-content: center; text-align: center; min-height: 52px; width: 100%; font-size: 1rem; }
+.hero .note { display: block; margin: 0.6rem 0 0; color: var(--fg-soft); font-size: var(--text-meta); }
+
+.channels { list-style: none; margin: 1.6rem 0 0; padding: 0; max-width: var(--card-measure); border-top: 1px solid var(--fg-soft); }
+.channels li { border-bottom: 1px solid var(--border); max-width: none; }
+.channels a { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.6rem 1rem; min-height: 52px; padding: 0.7rem 0.4rem 0.7rem 0; text-decoration: none; color: var(--fg); margin: 0; }
+.channels a:hover { background: var(--tint); color: var(--link); }
+.channel-label { flex: 0 0 6rem; font-size: var(--text-label); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-soft); }
+.channel-value { flex: 1; min-width: 0; overflow-wrap: anywhere; font-family: var(--serif); font-size: 1.125rem; }
+.channels a:hover .channel-value { color: var(--link); }
+.channel-go { color: var(--fg-soft); }
+
+@media (max-width: 560px) {
+  .card-grid { grid-template-columns: 7rem minmax(0, 1fr); gap: 1rem; }
+  .hero .actions.two { grid-template-columns: 1fr; }
+  .channel-label { flex-basis: 100%; }
+}
+
+/* Hero spacing */
 .hero { padding: clamp(2.5rem, 6vw, 4.5rem) 0 clamp(2rem, 5vw, 3.5rem); }
 .hero .actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-top: 1.5rem; }
-.hero-grid { display: grid; gap: clamp(1.5rem, 4vw, 3rem); grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr); align-items: center; }
-.hero-portrait { width: min(320px, 100%); height: auto; aspect-ratio: 3 / 4; object-fit: cover; margin-inline: auto; }
 .tagline { font-family: var(--serif); font-weight: 700; font-size: clamp(1.35rem, 2.6vw, 1.9rem); line-height: 1.25; margin: 0 0 0.8rem; }
 @media (max-width: 760px) {
-  .hero-grid { grid-template-columns: 1fr; }
-  .hero-portrait { order: -1; width: min(220px, 60%); margin-inline: 0; }
-}
+    }
 
 /* Buttons — restrained: one solid accent, never full-bleed */
 .btn { display: inline-block; background: var(--crimson); color: #fff; font-weight: 600; padding: 0.7rem 1.15rem; border-radius: var(--radius); text-decoration: none; border: 0; cursor: pointer; font-family: var(--sans); justify-self: start; }
@@ -187,9 +224,6 @@ section[id] { scroll-margin-top: 1rem; }
 html { scroll-behavior: smooth; }
 
 /* Hero contact row — email, LinkedIn, calendar, GitHub — directly under the name */
-.contact-row { list-style: none; padding: 0; margin: 0.8rem 0 0; display: flex; flex-wrap: wrap; gap: 0.4rem 1.4rem; font-weight: 600; }
-.contact-row a { color: var(--fg); text-decoration-color: var(--border); }
-.contact-row a:hover { color: var(--link); }
 
 @media (min-width: 900px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
@@ -201,18 +235,20 @@ table.pricing { min-width: 0; }
 table.pricing td.row-title { font-weight: 600; }
 @media (max-width: 640px) {
   table.pricing thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-  table.pricing tr { display: block; padding: 0.7rem 0; border-bottom: 1px solid var(--border); }
-  table.pricing td { display: flex; justify-content: space-between; gap: 1rem; border: 0; padding: 0.15rem 0; }
-  table.pricing td::before { content: attr(data-label); color: var(--fg-soft); font-size: var(--text-label); text-transform: uppercase; letter-spacing: 0.06em; }
-  table.pricing td.row-title { display: block; }
-  table.pricing td.row-title::before { display: none; }
+  table.pricing tr { display: block; padding: 0.9rem 0; border-bottom: 1px solid var(--border); }
+  /* The column label was repeated on all 24 cells, doubling every row for no
+     information — the values already say what they are ("1 час, €150"). */
+  table.pricing td { display: block; border: 0; padding: 0; }
+  table.pricing td::before { content: none; }
+  table.pricing td.is-empty { display: none; }
+  table.pricing td.row-title { font-weight: 700; margin-bottom: 0.2rem; }
 }
 
 /* Touch targets and tap comfort */
-.nav a, .contact-row a { padding: 0.35rem 0; display: inline-block; }
+.nav a { padding: 0.35rem 0; display: inline-block; }
 
 /* Tap targets ≥ 44px without moving anything: pad the hit area, pull it back with margins */
-.contact-row a, .site-footer .links a, .site-footer p a { display: inline-block; padding: 0.65rem 0.3rem; margin: -0.65rem -0.3rem; }
+.site-footer .links a, .site-footer p a { display: inline-block; padding: 0.65rem 0.3rem; margin: -0.65rem -0.3rem; }
 .lang-toggle { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; }
 .wordmark { display: inline-flex; align-items: center; min-height: 44px; }
 
@@ -249,27 +285,16 @@ table.pricing td.row-title { font-weight: 600; }
   .site-header .nav { justify-content: flex-start; gap: 1rem; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); }
 }
 
-/* ---------- Hero: identity + portrait share the first screen on phones ---------- */
-.hero-grid { grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr); grid-template-areas: "id photo" "body photo"; align-items: start; }
-.hero-id { grid-area: id; }
-.hero-body { grid-area: body; }
-.hero-grid .hero-portrait { grid-area: photo; align-self: center; }
-.hero-grid.no-photo { grid-template-columns: 1fr; grid-template-areas: "id" "body"; }
 @media (max-width: 760px) {
   .hero { padding-top: 1.25rem; }
-  .hero-grid { grid-template-columns: 96px minmax(0, 1fr); grid-template-areas: "photo id" "body body"; gap: 0.9rem 1rem; align-items: start; }
-  .hero-grid .hero-portrait { order: 0; width: 96px; aspect-ratio: 1; object-fit: cover; object-position: 50% 15%; border-radius: 12px; margin: 0; align-self: start; }
-  .hero-id h1 { font-size: 1.75rem; margin-bottom: 0.3rem; }
+    .hero-grid   .hero-id h1 { font-size: 1.75rem; margin-bottom: 0.3rem; }
   .hero-id .kicker { font-size: 0.72rem; margin-bottom: 0.3rem; }
-  .contact-row { font-size: 1rem; gap: 0.2rem 1rem; margin-top: 0.4rem; }
-  .hero-body .rule { margin: 0.2rem 0 0.8rem; }
-  .hero-body .lead { font-size: 1rem; }
+    .hero-body .rule { margin: 0.2rem 0 0.8rem; }
 }
 
 /* Phones: CTA directly under the tagline so it sits inside the first screen; the lead follows */
 @media (max-width: 760px) {
-  .hero-body { display: flex; flex-direction: column; }
-  .hero-body .rule { order: 1; }
+    .hero-body .rule { order: 1; }
   .hero-body .tagline { order: 2; margin-bottom: 0.6rem; }
   .hero-body .actions { order: 3; margin: 0.2rem 0 1rem; }
   .hero-body .lead { order: 4; }
@@ -277,13 +302,8 @@ table.pricing td.row-title { font-weight: 600; }
 
 /* Phones: the business card is centred — portrait above the name, contacts and the button under it */
 @media (max-width: 760px) {
-  .hero-grid { grid-template-columns: 1fr; grid-template-areas: "photo" "id" "body"; gap: 0.9rem; justify-items: center; text-align: center; }
-  .hero-grid .hero-portrait { width: 128px; aspect-ratio: 1; object-fit: cover; object-position: 50% 15%; border-radius: 50%; margin: 0; }
-  .hero-id { width: 100%; }
-  .hero-id h1 { font-size: 1.9rem; }
-  .contact-row { justify-content: center; }
-  .hero-body { width: 100%; align-items: center; }
-  .hero-body .rule { margin-inline: auto; }
+    .hero-grid     .hero-id h1 { font-size: 1.9rem; }
+      .hero-body .rule { margin-inline: auto; }
   .hero-body .tagline { text-align: center; }
   .hero-body .actions { flex-direction: column; align-items: center; gap: 0.5rem; }
   .hero-body .actions .note { text-align: center; }
@@ -296,9 +316,14 @@ table.pricing td.row-title { font-weight: 600; }
 }
 
 /* ================= One body text: same family, size and colour everywhere; only weight varies ================= */
-.lead, .hero .lead, .note, .tagline ~ .note, .card p, .card .meta, .card-result, .card-involvement, .card li,
+.lead, .card p, .card-result, .card-involvement, .card li,
 table.pricing td, .site-footer p, .site-footer .links a, .channel-block p, .contact-row, .contact-row a, .problems li,
-.section li, .section p, .one-list li { font-family: var(--sans); font-size: var(--text); line-height: 1.6; color: var(--fg); font-weight: 400; }
+.section li, .section p, .one-list li { font-family: var(--sans); font-size: var(--text); line-height: 1.65; color: var(--fg); font-weight: 400; }
+
+/* One step down for captions — the brief's 14-16px meta tier. Not running copy:
+   a duration under a card title, the note beside a button, a table footnote. */
+.hero .lead { font-size: var(--text-lead); line-height: 1.45; }
+.note, .tagline ~ .note, .card .meta { font-size: var(--text-meta); color: var(--fg-soft); line-height: 1.5; }
 .contact-row a, .nav a { font-weight: 400; }
 .card-result strong, .card-involvement strong { font-weight: 700; }
 table.pricing td.row-title { font-weight: 700; }
@@ -317,8 +342,7 @@ table.pricing td.row-title { font-weight: 700; }
 /* Phones: fewer competing lines in the header and the hero */
 @media (max-width: 760px) {
   .hero-id .kicker { font-size: var(--text-label); }
-  .contact-row { font-size: var(--text); gap: 0.1rem 0.9rem; }
-  .site-header .nav { gap: 0.9rem; }
+    .site-header .nav { gap: 0.9rem; }
 }
 /* Every button carries a 1px border so solid and outlined ones are exactly the same height */
 .btn { border: 1px solid transparent; }

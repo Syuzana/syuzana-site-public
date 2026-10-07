@@ -53,17 +53,17 @@ INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('process.pr
 - В отчёте отдельно отмечаю, что подтверждено данными, а что остаётся предположением.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.title', 'ru', 'Опыт', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.intro', 'ru', 'Несколько результатов последних лет. Компании не называю, подробности в CV.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.items', 'ru', '- AI-мониторинг для теплиц: из более чем десяти моделей оставили четыре рабочие, перестроили разметку — средняя точность в production выросла с 0.6 до 0.9, ручной разметки стало меньше примерно на 95%.
-- Та же команда: переход на общие сервисы и мультитенантную инфраструктуру — облачные расходы на клиента снизились примерно в 10 раз, экономика стала положительной.
-- Государственная аналитика: NLP-система для 200–250 тысяч обращений в год — классификация, извлечение сущностей, маршрутизация; обработка ускорилась примерно в 5 раз, итоговое решение осталось за человеком.
-- Данные о мобильности: переход с построчного хранения на векторное — отчёт, который строился около трёх дней, стал строиться за полтора часа.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.items', 'ru', '- AI-мониторинг для теплиц: из более чем десяти моделей оставили четыре рабочие, перестроили разметку. Средняя точность в production выросла с 0.6 до 0.9, ручной разметки стало меньше примерно на 95%.
+- Мультитенантная инфраструктура: после перехода на общие сервисы облачные расходы на клиента снизились примерно в 10 раз, экономика стала положительной.
+- Государственная аналитика: NLP-система для 200–250 тысяч обращений в год, которая делает классификацию, извлечение сущностей и маршрутизацию. Обработка ускорилась примерно в 5 раз, итоговое решение осталось за человеком.
+- Данные о мобильности: после перехода с построчного хранения на векторное отчёт, который строился около трёх дней, стал строиться за полтора часа.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.types', 'ru', 'Чаще всего это компьютерное зрение и NLP в production, дата-платформы, легаси-системы и экономика AI-продуктов на ранней стадии.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('about.bio', 'ru', 'Технический продакт-оунер: веду AI- и дата-продукты от решения до работающей системы и считаю, во что они обходятся в эксплуатации.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('about.bio', 'ru', 'Я руководитель продукта с техническим опытом. Помогаю найти фокус продукта и понять, стоит ли его делать. Исследую ценность, рынок, аудиторию и конкурентов. Считаю, окупится ли продукт, и определяю, каким он должен быть технически. Составляю стратегию развития и сопровождаю разработку до запуска.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('about.cv_label', 'ru', 'Скачать CV (PDF)', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.title', 'ru', 'Цены', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.intro', 'ru', 'Ставка **от €100 в час**, отдельные задачи от двух часов. Объём проекта оцениваю в часах заранее и фиксирую письменно.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.columns', 'ru', 'Формат | Объём | Срок', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.rows', 'ru', 'Первая консультация | 20–40 минут, бесплатно | —
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.rows', 'ru', 'Первая консультация | 20–40 минут, бесплатно | –
 Консультация | 1 час, €150 | в течение недели
 Консультация с письменным разбором | от 3 часов, от €350 | в течение недели
 Отдельная задача | от 2 часов | по договорённости
@@ -81,7 +81,7 @@ INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.fo
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_email', 'ru', 'Email', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_message', 'ru', 'Коротко о ситуации', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_send', 'ru', 'Отправить', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_ok', 'ru', 'Спасибо — отвечу в течение двух рабочих дней.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_ok', 'ru', 'Спасибо. Отвечу в течение двух рабочих дней.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_error', 'ru', 'Не получилось отправить. Напишите, пожалуйста, на почту.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.channel_line', 'ru', 'Канал про этику данных и продуктовый анализ.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.linkedin_label', 'ru', 'LinkedIn', '1970-01-01T00:00:00Z');
@@ -169,17 +169,17 @@ INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('process.pr
 - In the report I mark separately what the data confirms and what remains an assumption.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.title', 'en', 'Experience', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.intro', 'en', 'A few results from recent years. Companies are not named; details are in the CV.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.items', 'en', '- AI monitoring for greenhouses: of more than ten detection models we kept the four that worked and rebuilt labelling — average production accuracy went from 0.6 to 0.9, manual annotation fell by about 95%.
-- Same team: a move to shared services and multi-tenant infrastructure cut cloud cost per customer by roughly 10x and turned the unit economics positive.
-- Government analytics: an NLP system for 200–250 thousand citizen requests a year — classification, entity extraction, routing; processing became about 5x faster, with a person making the final call.
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.items', 'en', '- AI monitoring for greenhouses: of more than ten detection models we kept the four that worked and rebuilt labelling. Average production accuracy went from 0.6 to 0.9, manual annotation fell by about 95%.
+- Multi-tenant infrastructure: a move to shared services cut cloud cost per customer by roughly 10x and turned the unit economics positive.
+- Government analytics: an NLP system for 200–250 thousand citizen requests a year, doing classification, entity extraction and routing. Processing became about 5x faster, with a person making the final call.
 - Mobility data: moving from row-based to vector-based storage took a report from about three days to an hour and a half.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.types', 'en', 'Most often this is computer vision and NLP in production, data platforms, legacy systems and the economics of early-stage AI products.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('about.bio', 'en', 'Technical product owner: I take AI and data products from the decision to a working system, and I count what they cost to run.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('about.bio', 'en', 'I''m a product lead with a technical background. I help find the product''s focus and decide whether it is worth doing. I research its value, the market, the audience and the competition. I work out whether the product pays back, and define how it should be built. I write the growth strategy and see development through to launch.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('about.cv_label', 'en', 'Download CV (PDF)', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.title', 'en', 'Pricing', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.intro', 'en', 'The rate is **from €100 an hour**, single tasks from two hours. Project scope is estimated in hours up front and fixed in writing.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.columns', 'en', 'Format | Scope | Duration', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.rows', 'en', 'First consultation | 20–40 minutes, free | —
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.rows', 'en', 'First consultation | 20–40 minutes, free | –
 Consultation | 1 hour, €150 | within a week
 Consultation with a written review | from 3 hours, from €350 | within a week
 Single task | from 2 hours | by agreement
@@ -197,7 +197,7 @@ INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.fo
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_email', 'en', 'Email', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_message', 'en', 'Briefly, what''s the situation?', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_send', 'en', 'Send', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_ok', 'en', 'Thank you — I''ll reply within two working days.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_ok', 'en', 'Thank you. I''ll reply within two working days.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_error', 'en', 'Couldn''t send. Please email me instead.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.channel_line', 'en', 'A channel on data ethics and product analysis.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.linkedin_label', 'en', 'LinkedIn', '1970-01-01T00:00:00Z');
@@ -235,5 +235,6 @@ INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.tel
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contacts.email', '*', '{{SET_IN_ADMIN}}', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contacts.linkedin', '*', '{{SET_IN_ADMIN}}', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contacts.github', '*', '{{SET_IN_ADMIN}}', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contacts.telegram', '*', '{{SET_IN_ADMIN}}', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contacts.channel', '*', '{{SET_IN_ADMIN}}', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contacts.booking_url', '*', '{{SET_IN_ADMIN}}', '1970-01-01T00:00:00Z');

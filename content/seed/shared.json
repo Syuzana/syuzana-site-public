@@ -2,6 +2,7 @@
   "contacts.email": "{{SET_IN_ADMIN}}",
   "contacts.linkedin": "{{SET_IN_ADMIN}}",
   "contacts.github": "{{SET_IN_ADMIN}}",
+  "contacts.telegram": "{{SET_IN_ADMIN}}",
   "contacts.channel": "{{SET_IN_ADMIN}}",
   "contacts.booking_url": "{{SET_IN_ADMIN}}"
 }

@@ -8,6 +8,7 @@ export const SHARED_KEYS = [
   "contacts.email",
   "contacts.linkedin",
   "contacts.github",
+  "contacts.telegram",
   "contacts.channel",
   "contacts.booking_url",
 ] as const;

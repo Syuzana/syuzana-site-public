@@ -18,29 +18,45 @@ const BookButton: FC<{ c: Content; lang: Lang; labelKey: string; class?: string 
   );
 };
 
-/** Contact row for the hero — the first thing a visitor from the QR code needs. */
-const ContactRow: FC<{ c: Content }> = ({ c }) => {
+/** The five channels, full size: the card's whole job is who she is and how to reach her. */
+const ContactList: FC<{ c: Content }> = ({ c }) => {
   const email = c.value("contacts.email");
-  const items: Array<[string, string, boolean]> = [
-    [email ? `mailto:${email}` : "", email, false],
-    [link(c, "contacts.linkedin"), c.get("footer.linkedin_label"), true],
-    [link(c, "contacts.channel"), c.get("footer.telegram_label"), true],
-    [link(c, "contacts.github"), c.get("footer.github_label"), true],
+  const rows: Array<[string, string, string, boolean]> = [
+    ["contacts.email", email ? `mailto:${email}` : "", c.get("contact.email_label"), false],
+    ["contacts.linkedin", link(c, "contacts.linkedin"), c.get("footer.linkedin_label"), true],
+    ["contacts.telegram", link(c, "contacts.telegram"), c.get("footer.telegram_label"), true],
+    ["contacts.github", link(c, "contacts.github"), c.get("footer.github_label"), true],
+    ["contacts.channel", link(c, "contacts.channel"), c.get("footer.channel_label"), true],
   ];
-  const present = items.filter(([href, label]) => href && label);
+  const present = rows.filter(([, href, label]) => href && label);
   if (present.length === 0) return null;
   return (
-    <ul class="contact-row" aria-label={c.get("hero.contacts_label")}>
-      {present.map(([href, label, external]) => (
+    <ul class="channels" aria-label={c.get("hero.contacts_label")}>
+      {present.map(([key, href, label, external]) => (
         <li>
           <a href={href} rel={external ? "noopener" : undefined}>
-            {label}
+            <span class="channel-label">{label}</span>
+            <span class="channel-value">{key === "contacts.email" ? email : hostPath(href)}</span>
+            <span class="channel-go" aria-hidden="true">&#8594;</span>
           </a>
         </li>
       ))}
     </ul>
   );
 };
+
+/** Show a link as the reader would say it: "/in/handle", "@handle" — never the full URL. */
+function hostPath(href: string): string {
+  try {
+    const u = new URL(href);
+    const path = u.pathname.replace(/\/$/, "");
+    if (/t\.me$/.test(u.hostname)) return `@${path.replace(/^\//, "")}`;
+    if (/github\.com$/.test(u.hostname)) return `@${path.replace(/^\//, "")}`;
+    return path || u.hostname;
+  } catch {
+    return href;
+  }
+}
 
 const PROJECT_FORMATS = ["evaluate", "audit"] as const;
 const TEAM_FORMATS = ["fractional"] as const;
@@ -97,12 +113,16 @@ const PricingTable: FC<{ c: Content }> = ({ c }) => {
       <tbody>
         {rows.map((cells) => (
           <tr>
-            {cells.map((cell, i) => (
-              // data-label lets the row collapse into a labelled block on narrow screens.
-              <td data-label={columns[i] ?? ""} class={i === 0 ? "row-title" : undefined}>
-                {cell}
-              </td>
-            ))}
+            {cells.map((cell, i) => {
+              // A dash means "not applicable"; on a phone the row reads better without that line.
+              const empty = i > 0 && (cell === "" || cell === "—" || cell === "-");
+              const cls = [i === 0 ? "row-title" : "", empty ? "is-empty" : ""].filter(Boolean).join(" ");
+              return (
+                <td data-label={columns[i] ?? ""} class={cls || undefined}>
+                  {cell}
+                </td>
+              );
+            })}
           </tr>
         ))}
       </tbody>
@@ -139,32 +159,36 @@ export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, formEn
   return (
     <Layout c={c} lang={lang} path={path} title={`${c.get("site.name")} — ${c.get("site.role")}`}>
       <section class="hero" id="top">
-        <div class={`wrap hero-grid${hasPhoto ? "" : " no-photo"}`}>
-          <div class="hero-id">
+        <div class="wrap card-grid">
+          {hasPhoto ? (
+            <img class="portrait card-portrait" src="/assets/photo" alt={c.get("site.name")} width="720" height="960" fetchpriority="high" />
+          ) : null}
+          <div class="card-id">
             <p class="kicker">{c.get("hero.role")}</p>
             <h1>{c.get("site.name")}</h1>
-            <ContactRow c={c} />
           </div>
-          {hasPhoto ? (
-            <img class="portrait hero-portrait" src="/assets/photo" alt={c.get("site.name")} width="720" height="960" fetchpriority="high" />
-          ) : null}
-          <div class="hero-body">
-            <hr class="rule" />
-            <p class="tagline">
-              <Inline c={c} k="hero.title" />
-            </p>
-            <p class="lead">
-              <Inline c={c} k="hero.lead" />
-            </p>
-            <div class="actions">
-              <BookButton c={c} lang={lang} labelKey="hero.cta" />
-              <span class="note">{c.get("hero.note")}</span>
-            </div>
+        </div>
+        <div class="wrap">
+          <p class="tagline">
+            <Inline c={c} k="hero.title" />
+          </p>
+          <p class="lead">
+            <Inline c={c} k="about.bio" />
+          </p>
+          <div class="actions two">
+            <BookButton c={c} lang={lang} labelKey="hero.cta" />
+            {hasCv ? (
+              <a class="btn secondary" href="/cv.pdf">
+                {c.get("about.cv_label")}
+              </a>
+            ) : null}
           </div>
+          <p class="note">{c.get("hero.note")}</p>
+          <ContactList c={c} />
         </div>
       </section>
 
-      <section class="section" id="situations">
+      <section class="section tint" id="situations">
         <div class="wrap">
           <SectionHead c={c} titleKey="problems.title" />
           <div class="problems">
@@ -195,7 +219,7 @@ export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, formEn
         </div>
       </section>
 
-      <section class="section" id="process">
+      <section class="section tint" id="process">
         <div class="wrap">
           <SectionHead c={c} titleKey="process.title" />
           <div class="one-list">
@@ -223,7 +247,7 @@ export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, formEn
         </div>
       </section>
 
-      <section class="section" id="pricing">
+      <section class="section tint" id="pricing">
         <div class="wrap">
           <SectionHead c={c} titleKey="pricing.title" />
           <Text c={c} k="pricing.intro" />

@@ -56,7 +56,7 @@ describe("public pages render from D1", () => {
     expect(res.status).toBe(200);
     const html = await res.text();
     expect(html.startsWith("<!doctype html>")).toBe(true);
-    expect(html).toContain("Стратегия и развитие AI-продуктов");
+    expect(html).toContain("Я руководитель продукта с техническим опытом");
     expect(html).toContain('lang="ru"');
     expect(res.headers.get("Content-Security-Policy")).toContain("script-src https://static.cloudflareinsights.com");
     expect(res.headers.get("Content-Security-Policy")).not.toContain("googleapis");
@@ -100,7 +100,7 @@ describe("public pages render from D1", () => {
   it("hides contact links while they are still placeholders", async () => {
     const html = await (await request("/en/")).text();
     expect(html).not.toContain("SET_IN_ADMIN");
-    expect(html).not.toContain('class="contact-row"');
+    expect(html).not.toContain('class="channels"');
   });
   it("shows the contact form only when a delivery webhook is configured", async () => {
     expect(await (await request("/en/")).text()).not.toContain('action="/api/contact"');
@@ -165,7 +165,7 @@ describe("admin gate (fails closed)", () => {
     expect((await request("/admin/content", { method: "POST", body: body() }, devEnv)).status).toBe(403);
   });
   it("saves an edit, confirms it, and renders it escaped on the public page", async () => {
-    const body = new URLSearchParams({ lang: "en", "v:hero.title": 'Edited <script>alert(1)</script> "title"' });
+    const body = new URLSearchParams({ lang: "en", "v:about.bio": 'Edited <script>alert(1)</script> "title"' });
     const res = await adminPost("/admin/content", body);
     expect(res.status).toBe(303);
     expect(res.headers.get("Location")).toBe("/admin?lang=en&saved=1");
@@ -175,14 +175,17 @@ describe("admin gate (fails closed)", () => {
     const flash = await (await request("/admin?lang=en&saved=1", {}, devEnv)).text();
     expect(flash).toContain("1 value(s) changed");
   });
-  it("puts the contact row in the hero once contacts are set", async () => {
+  it("puts the channel list in the card once contacts are set", async () => {
     const body = new URLSearchParams({ lang: "en", "v:contacts.email": "me@example.com", "v:contacts.linkedin": "https://profile.example.org/me" });
     expect((await adminPost("/admin/content", body)).status).toBe(303);
     const html = await (await request("/en/")).text();
-    const row = html.indexOf('class="contact-row"');
+    const row = html.indexOf('class="channels"');
     expect(row).toBeGreaterThan(-1);
-    expect(row).toBeLessThan(html.indexOf("<hr"));
+    // Contact-first: the channels come before the first section below the card.
+    expect(row).toBeLessThan(html.indexOf('id="situations"'));
     expect(html).toContain("mailto:me@example.com");
+    // Each row is labelled, so the value is never the only thing read out.
+    expect(html).toContain('class="channel-label"');
   });
   it("ignores keys that do not exist", async () => {
     await adminPost("/admin/content", new URLSearchParams({ lang: "en", "v:evil.key": "x" }));
@@ -388,7 +391,7 @@ describe("uploads are validated by magic bytes", () => {
     expect(res.status).toBe(200);
     expect(res.headers.get("Content-Type")).toBe("image/png");
     const home = await (await request("/ru/")).text();
-    expect(home).toContain('class="portrait hero-portrait"');
+    expect(home).toContain('class="portrait card-portrait"');
   });
   it("caps the request body before buffering", async () => {
     const res = await upload("/admin/upload/cv", new Uint8Array(6 * 1024 * 1024), "big.pdf");
