@@ -58,6 +58,27 @@ function hostPath(href: string): string {
   }
 }
 
+/** A result reads as an entry, not a bullet: a crimson dateline, then the number. */
+const Results: FC<{ c: Content }> = ({ c }) => {
+  const items = listItems(c.get("experience.items"));
+  if (items.length === 0) return null;
+  return (
+    <ul class="results">
+      {items.map((item) => {
+        const split = item.indexOf(":");
+        const what = split > 0 ? item.slice(0, split).trim() : "";
+        const rest = split > 0 ? item.slice(split + 1).trim() : item;
+        return (
+          <li>
+            {what ? <span class="what">{what}</span> : null}
+            <p>{rest.charAt(0).toUpperCase() + rest.slice(1)}</p>
+          </li>
+        );
+      })}
+    </ul>
+  );
+};
+
 const PROJECT_FORMATS = ["evaluate", "audit"] as const;
 const TEAM_FORMATS = ["fractional"] as const;
 const FORMAT_IDS = [...PROJECT_FORMATS, ...TEAM_FORMATS] as const;
@@ -235,8 +256,10 @@ export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, formEn
           <p class="lead">
             <Inline c={c} k="experience.intro" />
           </p>
-          <Text c={c} k="experience.items" />
-          <Text c={c} k="experience.types" />
+          <Results c={c} />
+          <p class="note mt">
+            <Inline c={c} k="experience.types" />
+          </p>
           {hasCv ? (
             <p>
               <a class="btn secondary" href="/cv.pdf">
