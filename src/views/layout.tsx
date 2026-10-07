@@ -9,6 +9,7 @@ export type PageProps = PropsWithChildren<{
   path: string;
   title: string;
   description?: string;
+  photoUrl?: string;
 }>;
 
 /** An admin-entered link, or "" when unset or not http(s)/mailto/relative. */
@@ -47,8 +48,9 @@ export const SectionHead: FC<{ c: Content; titleKey: string; kicker?: string }> 
   </>
 );
 
-export const Layout: FC<PageProps> = ({ c, lang, path, title, description, children }) => {
+export const Layout: FC<PageProps> = ({ c, lang, path, title, description, photoUrl = "/assets/photo", children }) => {
   const other = otherLang(lang);
+  const photo = new URL(photoUrl, "https://syuzana.com").href;
   return (
     <html lang={lang}>
       <head>
@@ -64,10 +66,11 @@ export const Layout: FC<PageProps> = ({ c, lang, path, title, description, child
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description ?? c.get("site.description")} />
         <meta property="og:url" content={`https://syuzana.com${path}`} />
-        <meta property="og:image" content="https://syuzana.com/assets/photo" />
+        <meta property="og:image" content={photo} />
         <meta property="og:image:alt" content={c.get("site.name")} />
         <meta property="og:locale" content={lang === "ru" ? "ru_RU" : "en_GB"} />
         <meta name="twitter:card" content="summary" />
+        <meta name="twitter:image" content={photo} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -78,7 +81,7 @@ export const Layout: FC<PageProps> = ({ c, lang, path, title, description, child
               jobTitle: c.get("site.role"),
               description: c.get("site.description"),
               url: "https://syuzana.com/",
-              image: "https://syuzana.com/assets/photo",
+              image: photo,
               email: c.value("contacts.email") ? `mailto:${c.value("contacts.email")}` : undefined,
               sameAs: [link(c, "contacts.linkedin"), link(c, "contacts.github"), link(c, "contacts.channel")].filter(Boolean),
             }),

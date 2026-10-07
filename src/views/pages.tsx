@@ -199,15 +199,15 @@ const ContactForm: FC<{ c: Content; lang: Lang }> = ({ c, lang }) => (
   </form>
 );
 
-export type HomeProps = Props & { hasPhoto: boolean; hasCv: boolean; formEnabled: boolean; sent?: "ok" | "error"; origin: string };
+export type HomeProps = Props & { hasPhoto: boolean; photoUrl?: string; hasCv: boolean; formEnabled: boolean; sent?: "ok" | "error"; origin: string };
 
 /** The whole site is one page: a business card first, then everything a visitor scrolls for. */
-export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, formEnabled, sent, origin }) => (
-  <Layout c={c} lang={lang} path={path} title={`${c.get("site.name")} — ${c.get("site.role")}`}>
+export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, photoUrl = "/assets/photo", hasCv, formEnabled, sent, origin }) => (
+  <Layout c={c} lang={lang} path={path} photoUrl={photoUrl} title={`${c.get("site.name")} — ${c.get("site.role")}`}>
     <section class="hero" id="top">
       <div class={`wrap card-grid${hasPhoto ? "" : " no-photo"}`}>
         {hasPhoto ? (
-          <img class="portrait card-portrait" src="/assets/photo" alt={c.get("site.name")} width="720" height="960" fetchpriority="high" />
+          <img class="portrait card-portrait" src={photoUrl} alt={c.get("site.name")} width="720" height="960" fetchpriority="high" />
         ) : null}
         <div class="card-id">
           <p class="kicker">{c.get("site.role").split("·")[0]?.trim()}</p>

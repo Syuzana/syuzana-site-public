@@ -11,6 +11,8 @@
 # Sensitive sources — CV, photo, contact handles, raw research.
 # These never enter git in any repo; at runtime they live in R2 / D1 / Worker secrets.
 /research/
+# Original portraits supplied at the project root.
+/*портрет*.png
 
 # Raw binary sources dropped into the knowledge base (portraits, scans) — never committed.
 knowledge/sources/

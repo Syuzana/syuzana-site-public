@@ -410,13 +410,32 @@ describe("uploads are validated by magic bytes", () => {
     expect(await res.text()).toContain("Upload rejected");
     expect((await request("/cv.pdf")).headers.get("Content-Type")).toBe("application/pdf");
   });
-  it("stores the photo, serves it, and shows it in the hero", async () => {
+  it("serves the photo and refreshes hero and social image URLs after replacing it", async () => {
     await upload("/admin/upload/photo", png, "me.png");
     const res = await request("/assets/photo");
     expect(res.status).toBe(200);
     expect(res.headers.get("Content-Type")).toBe("image/png");
     const home = await (await request("/ru/")).text();
     expect(home).toContain('class="portrait card-portrait"');
+    const version = res.headers.get("ETag")!.replaceAll('"', "");
+    const photoUrl = `/assets/photo?v=${version}`;
+    expect(home).toContain(`src="${photoUrl}"`);
+    expect(home).toContain(`property="og:image" content="https://syuzana.com${photoUrl}"`);
+    expect(home).toContain(`name="twitter:image" content="https://syuzana.com${photoUrl}"`);
+    expect(home).toContain(`"image":"https://syuzana.com${photoUrl}"`);
+    const cached = await request(photoUrl, { headers: { "If-None-Match": res.headers.get("ETag")! } });
+    expect(cached.status).toBe(304);
+
+    await upload("/admin/upload/photo", new Uint8Array([...png, 1]), "replacement.png");
+    const replacement = await request("/assets/photo");
+    const newVersion = replacement.headers.get("ETag")!.replaceAll('"', "");
+    expect(newVersion).not.toBe(version);
+    for (const lang of ["ru", "en"]) {
+      const updated = await (await request(`/${lang}/`)).text();
+      expect(updated).not.toContain(photoUrl);
+      expect(updated).toContain(`src="/assets/photo?v=${newVersion}"`);
+      expect(updated).toContain(`property="og:image" content="https://syuzana.com/assets/photo?v=${newVersion}"`);
+    }
   });
   it("caps the request body before buffering", async () => {
     const res = await upload("/admin/upload/cv", new Uint8Array(6 * 1024 * 1024), "big.pdf");
