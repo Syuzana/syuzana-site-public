@@ -18,7 +18,7 @@ import {
   verifySession,
 } from "./auth";
 import { LoginPage } from "./views/login";
-import { deliverToSheet, notifyTelegram, validateContact } from "./contact";
+import { contactEnabled, deliverContact, notifyTelegram, validateContact } from "./contact";
 import { editableKeys, loadContent, saveContent } from "./content";
 import { DEFAULT_LANG, LANG_COOKIE, detectLang, isLang, type Lang } from "./i18n";
 import { ASSET_KEYS, MAX_BYTES, validateUpload, type AssetKind } from "./uploads";
@@ -120,7 +120,7 @@ app.get("/:lang{(?:ru|en)}", async (c: AppContext) => {
   ]);
   const sentParam = c.req.query("sent");
   const sent = sentParam === "ok" || sentParam === "error" ? sentParam : undefined;
-  const formEnabled = Boolean(c.env.CONTACT_WEBHOOK_URL?.trim());
+  const formEnabled = contactEnabled(c.env);
   return page(c, <HomePage c={content} lang={lang} path={`/${lang}/`} hasPhoto={photo !== null} hasCv={cv !== null} formEnabled={formEnabled} sent={sent} origin={new URL(c.req.url).origin} />);
 });
 
@@ -166,13 +166,13 @@ app.post("/api/contact", bodyLimit({ maxSize: 16 * 1024 }), async (c) => {
   const wantsJson = c.req.header("Accept")?.includes("application/json");
   const result = (ok: boolean, status: 200 | 400 | 502 | 503) => wantsJson ? c.json({ ok }, status) : back(ok ? "ok" : "error");
 
-  const validation = validateContact({ name: form["name"], email: form["email"], message: form["message"] }, lang, new Date());
+  const validation = validateContact({ id: form["id"], name: form["name"], email: form["email"], message: form["message"] }, lang, new Date());
   if (!validation.ok) {
     console.log(JSON.stringify({ event: "contact", outcome: "invalid", reason: validation.reason }));
     return result(false, 400);
   }
 
-  const delivery = await deliverToSheet(c.env, validation.value);
+  const delivery = await deliverContact(c.env, validation.value);
   console.log(JSON.stringify({ event: "contact", outcome: delivery.delivered ? "delivered" : "failed", status: delivery.status }));
   if (delivery.delivered) c.executionCtx.waitUntil(notifyTelegram(c.env, validation.value));
   return result(delivery.delivered, delivery.delivered ? 200 : delivery.status === 503 ? 503 : 502);

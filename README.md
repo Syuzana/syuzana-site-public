@@ -5,7 +5,7 @@ Public pages, a downloadable CV, a booking link, and a private admin panel where
 site’s owner edits every text block, swaps the CV, and swaps the photo without
 redeploying.
 
-> Release 2.0.0: the front end implements visit-card mockup v14. The tracked
+> The front end implements visit-card mockup v14. The tracked
 > [HTML reference and build specification](specs/mockup/SPEC.md) are part of the
 > requirements. Photo, CV and actual contact values are stored outside git.
 
@@ -20,7 +20,8 @@ Serverless, on Cloudflare, costing nothing to run for a personal site:
 - **Cloudflare Access** (Zero Trust) gates `/admin` to a single Google identity; the
   Worker re-verifies the Access token, so the admin is sealed even on the raw origin.
 - **Booking** is a Google Calendar appointment schedule; **contact messages** go to a
-  Google Sheet via Apps Script — no database to run for captured data.
+  Google Sheet via Apps Script, with email notifications to the owner.
+  [Delivery setup](integrations/google-contact/README.md) documents the configuration.
 
 It runs standalone on Cloudflare — its own zone, Worker, bucket, and database.
 Full rationale and the cost breakdown are in
@@ -65,7 +66,7 @@ npm install
 cp .dev.vars.example .dev.vars        # local admin bypass is on in the example
 npm run db:migrate:local              # schema + default copy into local D1
 npm run dev                           # http://localhost:8787 → redirects to /en/ or /ru/
-npm test                              # vitest inside the Workers runtime (local D1 + R2)
+npm test                              # Worker integration tests and Apps Script delivery tests
 npm run typecheck
 ```
 
@@ -84,6 +85,7 @@ npx wrangler secret put ACCESS_TEAM_DOMAIN           # <team>.cloudflareaccess.c
 npx wrangler secret put ACCESS_AUD                   # the Access application's Audience tag
 npx wrangler secret put ADMIN_EMAIL                  # the one Google identity allowed in
 npx wrangler secret put CONTACT_WEBHOOK_URL          # Apps Script web-app URL (optional)
+npx wrangler secret put CONTACT_WEBHOOK_SECRET       # shared token (required with URL)
 npm run deploy
 ```
 

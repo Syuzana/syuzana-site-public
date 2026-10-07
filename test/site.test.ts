@@ -10,7 +10,7 @@ import { renderText, safeUrl } from "../src/render";
 import { validateUpload } from "../src/uploads";
 
 // Explicitly blank every secret so local .dev.vars can never leak into test behaviour.
-const noSecrets = { ACCESS_TEAM_DOMAIN: "", ACCESS_AUD: "", ADMIN_EMAIL: "", CONTACT_WEBHOOK_URL: "", TELEGRAM_BOT_TOKEN: "", TELEGRAM_CHAT_ID: "" };
+const noSecrets = { ACCESS_TEAM_DOMAIN: "", ACCESS_AUD: "", ADMIN_EMAIL: "", CONTACT_WEBHOOK_URL: "", CONTACT_WEBHOOK_SECRET: "", TELEGRAM_BOT_TOKEN: "", TELEGRAM_CHAT_ID: "" };
 const prodEnv = { ...env, ...noSecrets, ENVIRONMENT: "production", ADMIN_DEV_BYPASS: "" } as Env;
 const devEnv = { ...env, ...noSecrets, ENVIRONMENT: "development", ADMIN_DEV_BYPASS: "true" } as Env;
 const sameOrigin = { Origin: "https://syuzana.com" };
@@ -109,8 +109,26 @@ describe("public pages render from D1", () => {
   });
   it("shows the contact form only when a delivery webhook is configured", async () => {
     expect(await (await request("/en/")).text()).not.toContain('action="/api/contact"');
-    const withHook = { ...prodEnv, CONTACT_WEBHOOK_URL: "https://script.google.com/macros/s/x/exec" } as Env;
+    const withHook = { ...prodEnv, CONTACT_WEBHOOK_URL: "https://script.google.com/macros/s/x/exec", CONTACT_WEBHOOK_SECRET: "test-webhook-secret" } as Env;
     expect(await (await request("/en/", {}, withHook)).text()).toContain('action="/api/contact"');
+  });
+  it("renders personal Telegram in contacts and footer, and the channel handle", async () => {
+    const telegram = new URL("/demo_person", "https://t.me").href;
+    const channel = new URL("/demo_channel", "https://t.me").href;
+    await env.DB.batch([
+      env.DB.prepare("UPDATE content SET value=?1 WHERE key='contacts.telegram' AND lang='*'").bind(telegram),
+      env.DB.prepare("UPDATE content SET value=?1 WHERE key='contacts.channel' AND lang='*'").bind(channel),
+    ]);
+    try {
+      for (const lang of ["en", "ru"]) {
+        const html = await (await request(`/${lang}/`)).text();
+        expect(html.match(new RegExp(`href="${telegram}"`, "g"))).toHaveLength(2);
+        expect(html).toContain('<span class="channel-value">@demo_person</span>');
+        expect(html).toContain('<span class="channel-value">@demo_channel</span>');
+      }
+    } finally {
+      await env.DB.prepare("UPDATE content SET value='{{SET_IN_ADMIN}}' WHERE key IN ('contacts.telegram','contacts.channel') AND lang='*'").run();
+    }
   });
   it("serves a privacy notice in both languages and links it from the footer", async () => {
     const res = await request("/ru/privacy");
@@ -425,19 +443,48 @@ describe("contact form", () => {
     expect(await res.json()).toEqual({ ok: false });
   });
   it("acknowledges an in-page submission only after webhook delivery", async () => {
-    const delivery = vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response("ok", { status: 200 }));
+    const delivery = vi.spyOn(globalThis, "fetch").mockResolvedValue(Response.json({ ok: true, stored: true, notified: true }));
     try {
       const res = await request("/api/contact", {
         method: "POST", headers: { Accept: "application/json" },
         body: new URLSearchParams({ lang: "en", name: "A", email: "a@b.co", message: "hi" }),
-      }, { ...prodEnv, CONTACT_WEBHOOK_URL: "https://delivery.example.org/contact" });
+      }, { ...prodEnv, CONTACT_WEBHOOK_URL: "https://delivery.example.org/contact", CONTACT_WEBHOOK_SECRET: "test-webhook-secret" });
       expect(res.status).toBe(200);
       expect(await res.json()).toEqual({ ok: true });
       expect(delivery).toHaveBeenCalledTimes(1);
+      const forwarded = JSON.parse(String(delivery.mock.calls[0]?.[1]?.body));
+      expect(forwarded).toMatchObject({ token: "test-webhook-secret", name: "A", email: "a@b.co", message: "hi" });
+      expect(forwarded.id).toMatch(/^[0-9a-f-]{36}$/);
       expect(delivery).toHaveBeenCalledWith("https://delivery.example.org/contact", expect.objectContaining({ method: "POST" }));
     } finally {
       delivery.mockRestore();
     }
+  });
+  it.each([
+    ["Google login HTML", "<html>Sign in</html>"],
+    ["saved row with failed mail", JSON.stringify({ ok: false, stored: true, notified: false })],
+    ["HTTP success without receipts", JSON.stringify({ ok: true })],
+  ])("rejects %s as a delivery receipt", async (_name, body) => {
+    const delivery = vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(body));
+    try {
+      const res = await request("/api/contact", {
+        method: "POST", headers: { Accept: "application/json" },
+        body: new URLSearchParams({ lang: "en", name: "A", email: "a@b.co", message: "hi" }),
+      }, { ...prodEnv, CONTACT_WEBHOOK_URL: "https://delivery.example.org/contact", CONTACT_WEBHOOK_SECRET: "test-webhook-secret" });
+      expect(res.status).toBe(502);
+      expect(await res.json()).toEqual({ ok: false });
+    } finally {
+      delivery.mockRestore();
+    }
+  });
+  it("keeps a submission ID across retries and rejects invalid IDs", async () => {
+    const id = "01010101-0101-4101-8101-010101010101";
+    expect(validateContact({ id, name: "A", email: "a@b.co", message: "hi" }, "en", new Date())).toMatchObject({ ok: true, value: { id } });
+    const res = await request("/api/contact", {
+      method: "POST", headers: { Accept: "application/json" },
+      body: new URLSearchParams({ id: "invalid", name: "A", email: "a@b.co", message: "hi" }),
+    });
+    expect(res.status).toBe(400);
   });
   const now = new Date("2026-10-07T00:00:00Z");
   it("neutralises spreadsheet formulas instead of losing the lead", () => {

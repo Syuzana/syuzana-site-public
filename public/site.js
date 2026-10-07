@@ -2,7 +2,7 @@
 /** Keep copy feedback visible briefly before restoring the button label. */
 const COPY_FEEDBACK_MS = 1600;
 /** Allow the server's webhook timeout and the response trip to finish. */
-const CONTACT_TIMEOUT_MS = 15000;
+const CONTACT_TIMEOUT_MS = 20000;
 const copyButton = document.querySelector("[data-copy-email]");
 const email = document.getElementById("contact-email");
 
@@ -33,6 +33,8 @@ if (enquiry) {
   const submit = enquiry.querySelector('button[type="submit"]');
   const status = enquiry.querySelector(".form-status");
   const label = submit.textContent;
+  let lastDraft;
+  let draftId;
   enquiry.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (submit.disabled || !enquiry.reportValidity()) return;
@@ -40,10 +42,16 @@ if (enquiry) {
     submit.textContent = enquiry.dataset.sending;
     status.hidden = true;
     try {
+      const body = new FormData(enquiry);
+      const draft = JSON.stringify([body.get("name"), body.get("email"), body.get("message")]);
+      // Retrying an unchanged draft reuses its receipt; editing starts a new message.
+      if (draft !== lastDraft) draftId = crypto.randomUUID();
+      lastDraft = draft;
+      body.set("id", draftId);
       const response = await fetch(enquiry.action, {
         method: "POST",
         headers: { Accept: "application/json" },
-        body: new FormData(enquiry),
+        body,
         signal: AbortSignal.timeout(CONTACT_TIMEOUT_MS),
       });
       const result = await response.json();
@@ -51,6 +59,7 @@ if (enquiry) {
       status.textContent = enquiry.dataset.success;
       status.className = "form-status ok";
       enquiry.reset();
+      lastDraft = undefined;
     } catch {
       status.textContent = enquiry.dataset.error;
       status.className = "form-status error";

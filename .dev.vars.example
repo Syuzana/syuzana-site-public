@@ -24,6 +24,8 @@ ADMIN_EMAIL=
 
 # Google Apps Script web-app URL that appends contact-form rows to a Google Sheet.
 CONTACT_WEBHOOK_URL=
+# Shared token checked by Apps Script; never exposed to visitors.
+CONTACT_WEBHOOK_SECRET=
 
 # Optional: ping a private Telegram chat on each contact message.
 TELEGRAM_BOT_TOKEN=

@@ -46,7 +46,7 @@ const ContactList: FC<{ c: Content }> = ({ c }) => {
           ) : (
             <a href={href} rel={external ? "noopener" : undefined}>
               <span class="channel-label">{label}</span>
-              <span class="channel-value">{key === "contacts.channel" ? c.get("footer.channel_title") : hostPath(href)}</span>
+              <span class="channel-value">{hostPath(href)}</span>
               <span class="channel-go" aria-hidden="true">&#8594;</span>
             </a>
           )}
@@ -179,6 +179,7 @@ const PricingTable: FC<{ c: Content }> = ({ c }) => {
 const ContactForm: FC<{ c: Content; lang: Lang }> = ({ c, lang }) => (
   <form class="stack enquiry" method="post" action="/api/contact" data-success={c.get("contact.form_ok")} data-error={c.get("contact.form_error")} data-sending={c.get("contact.form_sending")}>
     <input type="hidden" name="lang" value={lang} />
+    <input type="hidden" name="id" value={crypto.randomUUID()} />
     <label>
       {c.get("contact.form_name")}
       <input name="name" required maxlength={120} autocomplete="name" />

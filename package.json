@@ -1,6 +1,6 @@
 {
   "name": "syuzana-site",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "description": "Personal site of Syuzana Tevdoradze — Cloudflare Worker (Hono) + D1 + R2 + Access",
   "type": "module",
@@ -9,7 +9,7 @@
     "deploy": "wrangler deploy",
     "types": "wrangler types",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run && node --test test/google-contact.node.mjs",
     "seed:build": "node scripts/build-seed.mjs",
     "favicon:build": "node scripts/build-favicon.mjs",
     "admin:password": "node scripts/make-password.mjs",

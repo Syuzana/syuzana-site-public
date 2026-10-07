@@ -1,16 +1,18 @@
 /**
  * Contact-form capture: validated, size-bounded, formula-injection-guarded, then forwarded to
- * a Google Apps Script web app that appends a row to a Google Sheet. Optional Telegram ping.
+ * a Google Apps Script web app that saves a row and sends an email. Optional Telegram ping.
  * No database of visitor data lives in this Worker (D-004).
  */
 
 export type ContactEnv = {
   CONTACT_WEBHOOK_URL?: string;
+  CONTACT_WEBHOOK_SECRET?: string;
   TELEGRAM_BOT_TOKEN?: string;
   TELEGRAM_CHAT_ID?: string;
 };
 
 export type ContactMessage = {
+  id: string;
   name: string;
   email: string;
   message: string;
@@ -20,6 +22,8 @@ export type ContactMessage = {
 };
 
 export const LIMITS = { name: 120, email: 254, message: 4000 } as const;
+/** Covers Apps Script startup, row persistence and mail submission. */
+const DELIVERY_TIMEOUT_MS = 12000;
 
 export type ContactValidation = { ok: true; value: ContactMessage } | { ok: false; reason: string };
 
@@ -51,13 +55,15 @@ function clean(raw: FieldValue, max: number): string | null {
 }
 
 export function validateContact(
-  fields: { name?: FieldValue; email?: FieldValue; message?: FieldValue },
+  fields: { id?: FieldValue; name?: FieldValue; email?: FieldValue; message?: FieldValue },
   lang: string,
   now: Date,
 ): ContactValidation {
   const name = clean(fields.name, LIMITS.name);
   const email = clean(fields.email, LIMITS.email)?.toLowerCase() ?? null;
   const message = clean(fields.message, LIMITS.message);
+  const id = fields.id ?? crypto.randomUUID();
+  if (typeof id !== "string" || !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(id)) return { ok: false, reason: "invalid message id" };
 
   if (!name || !email || !message) return { ok: false, reason: "all fields are required and bounded" };
   // An address cannot legitimately start with a formula character, so that one is rejected.
@@ -66,6 +72,7 @@ export function validateContact(
   return {
     ok: true,
     value: {
+      id,
       name: neutralizeFormula(name),
       email,
       message: neutralizeFormula(message),
@@ -78,19 +85,29 @@ export function validateContact(
 
 export type DeliveryResult = { delivered: boolean; status: number };
 
-/** POSTs the message to the Apps Script webhook. Bounded by a timeout; never throws. */
-export async function deliverToSheet(env: ContactEnv, message: ContactMessage): Promise<DeliveryResult> {
+/** Enable the form only when its authenticated delivery endpoint is configured. */
+export function contactEnabled(env: ContactEnv): boolean {
+  return Boolean(env.CONTACT_WEBHOOK_URL?.trim() && env.CONTACT_WEBHOOK_SECRET?.trim());
+}
+
+/** Requires an explicit receipt for both the saved row and the mail submission. */
+export async function deliverContact(env: ContactEnv, message: ContactMessage): Promise<DeliveryResult> {
   const url = env.CONTACT_WEBHOOK_URL?.trim();
-  if (!url) return { delivered: false, status: 503 };
+  if (!url || !contactEnabled(env)) return { delivered: false, status: 503 };
   try {
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(message),
+      body: JSON.stringify({ ...message, token: env.CONTACT_WEBHOOK_SECRET?.trim() }),
       redirect: "follow", // Apps Script answers with a redirect to the result
-      signal: AbortSignal.timeout(8000),
+      signal: AbortSignal.timeout(DELIVERY_TIMEOUT_MS),
     });
-    return { delivered: response.ok, status: response.status };
+    if (!response.ok) return { delivered: false, status: response.status };
+    const receipt: unknown = await response.json();
+    const delivered = typeof receipt === "object" && receipt !== null &&
+      "ok" in receipt && receipt.ok === true && "stored" in receipt && receipt.stored === true &&
+      "notified" in receipt && receipt.notified === true;
+    return { delivered, status: delivered ? 200 : 502 };
   } catch {
     return { delivered: false, status: 502 };
   }
