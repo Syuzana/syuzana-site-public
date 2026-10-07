@@ -1,17 +1,29 @@
 import { Hono, type Context } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { HTTPException } from "hono/http-exception";
-import { getCookie, setCookie } from "hono/cookie";
+import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import { html } from "hono/html";
 import { secureHeaders } from "hono/secure-headers";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
-import { verifyAccess } from "./access";
+import { isDevBypass, verifyAccess } from "./access";
+import {
+  SESSION_COOKIE,
+  SESSION_TTL_SECONDS,
+  clearAttempts,
+  clientIp,
+  createSession,
+  recordFailure,
+  tooManyAttempts,
+  verifyPassword,
+  verifySession,
+} from "./auth";
+import { LoginPage } from "./views/login";
 import { deliverToSheet, notifyTelegram, validateContact } from "./contact";
 import { editableKeys, loadContent, saveContent } from "./content";
 import { DEFAULT_LANG, LANG_COOKIE, detectLang, isLang, type Lang } from "./i18n";
 import { ASSET_KEYS, MAX_BYTES, validateUpload, type AssetKind } from "./uploads";
 import { AdminPage } from "./views/admin";
-import { AboutPage, ContactPage, HomePage, NotFoundPage, PricingPage, plainErrorHtml } from "./views/pages";
+import { HomePage, NotFoundPage, plainErrorHtml } from "./views/pages";
 
 type Variables = { lang: Lang };
 type AppContext = Context<{ Bindings: Env; Variables: Variables }>;
@@ -79,37 +91,28 @@ app.use("/:lang{(?:ru|en)}/*", async (c, next) => {
   await next();
 });
 
-/* ---------- Public pages (SSR from D1) ---------- */
+/* ---------- Public page (one page, SSR from D1) ---------- */
 
 app.get("/:lang{(?:ru|en)}", async (c: AppContext) => {
   const lang = c.get("lang");
-  const content = await loadContent(c.env.DB, lang);
-  return page(c, <HomePage c={content} lang={lang} path={`/${lang}/`} />);
-});
-
-app.get("/:lang{(?:ru|en)}/pricing", async (c: AppContext) => {
-  const lang = c.get("lang");
-  const content = await loadContent(c.env.DB, lang);
-  return page(c, <PricingPage c={content} lang={lang} path={c.req.path} />);
-});
-
-app.get("/:lang{(?:ru|en)}/about", async (c: AppContext) => {
-  const lang = c.get("lang");
-  const [content, cv, photo] = await Promise.all([
+  const [content, photo, cv] = await Promise.all([
     loadContent(c.env.DB, lang),
-    c.env.ASSETS_BUCKET.head(ASSET_KEYS.cv),
     c.env.ASSETS_BUCKET.head(ASSET_KEYS.photo),
+    c.env.ASSETS_BUCKET.head(ASSET_KEYS.cv),
   ]);
-  return page(c, <AboutPage c={content} lang={lang} path={c.req.path} hasCv={cv !== null} hasPhoto={photo !== null} />);
-});
-
-app.get("/:lang{(?:ru|en)}/contact", async (c: AppContext) => {
-  const lang = c.get("lang");
-  const content = await loadContent(c.env.DB, lang);
   const sentParam = c.req.query("sent");
   const sent = sentParam === "ok" || sentParam === "error" ? sentParam : undefined;
-  return page(c, <ContactPage c={content} lang={lang} path={c.req.path} sent={sent} />);
+  return page(c, <HomePage c={content} lang={lang} path={`/${lang}/`} hasPhoto={photo !== null} hasCv={cv !== null} sent={sent} />);
 });
+
+// The former sub-pages live on as anchors, so old links and the QR code keep working.
+for (const [sub, anchor] of [
+  ["pricing", "pricing"],
+  ["about", "experience"],
+  ["contact", "contact"],
+] as const) {
+  app.get(`/:lang{(?:ru|en)}/${sub}`, (c: AppContext) => c.redirect(`/${c.get("lang")}/#${anchor}`, 301));
+}
 
 /* ---------- Files from R2 ---------- */
 
@@ -135,7 +138,7 @@ app.post("/api/contact", bodyLimit({ maxSize: 16 * 1024 }), async (c) => {
   const form = await c.req.parseBody();
   const langRaw = form["lang"];
   const lang: Lang = typeof langRaw === "string" && isLang(langRaw) ? langRaw : DEFAULT_LANG;
-  const back = (state: "ok" | "error") => c.redirect(`/${lang}/contact?sent=${state}`, 303);
+  const back = (state: "ok" | "error") => c.redirect(`/${lang}/?sent=${state}#contact`, 303);
 
   const validation = validateContact({ name: form["name"], email: form["email"], message: form["message"] }, lang, new Date());
   if (!validation.ok) {
@@ -156,20 +159,8 @@ type AdminContext = Context<{ Bindings: Env; Variables: AdminVariables }>;
 
 const admin = new Hono<{ Bindings: Env; Variables: AdminVariables }>({ strict: false });
 
-admin.use("*", async (c, next) => {
-  const result = await verifyAccess(c.req.raw, c.env);
-  if (!result.ok) {
-    console.log(JSON.stringify({ event: "admin_denied", status: result.status, reason: result.reason }));
-    return c.text(result.status === 503 ? "Admin is not configured." : "Forbidden", result.status);
-  }
-  c.set("who", result.email);
-  c.set("via", result.via);
-  c.header("X-Robots-Tag", "noindex, nofollow");
-  c.header("Cache-Control", "no-store");
-  await next();
-});
-
-// Same-origin check for state-changing requests (Access cookies make CSRF the one remaining vector).
+// Same-origin check for every state-changing admin request, login included — session and
+// Access cookies both ride along automatically, so CSRF is the remaining vector.
 admin.use("*", async (c, next) => {
   if (c.req.method === "POST") {
     const origin = c.req.header("Origin");
@@ -181,7 +172,97 @@ admin.use("*", async (c, next) => {
     }
     if (!originHost || originHost !== new URL(c.req.url).host) return c.text("Forbidden", 403);
   }
+  c.header("X-Robots-Tag", "noindex, nofollow");
+  c.header("Cache-Control", "no-store");
   await next();
+});
+
+/** Paths reachable without a session; everything else under /admin is gated. */
+const OPEN_ADMIN_PATHS = new Set(["/admin/login", "/admin/logout"]);
+
+function adminPath(c: Context): string {
+  const path = new URL(c.req.url).pathname;
+  return path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
+}
+
+/** Password session first (D-019), Cloudflare Access second when it is configured. */
+admin.use("*", async (c, next) => {
+  if (OPEN_ADMIN_PATHS.has(adminPath(c))) return next();
+
+  if (isDevBypass(c.env)) {
+    c.set("who", "dev@localhost");
+    c.set("via", "dev-bypass");
+    return next();
+  }
+
+  const passwordReady = Boolean(c.env.ADMIN_PASSWORD_HASH && c.env.SESSION_SECRET);
+  const accessReady = Boolean(c.env.ACCESS_TEAM_DOMAIN && c.env.ACCESS_AUD && c.env.ADMIN_EMAIL);
+  if (!passwordReady && !accessReady) {
+    console.log(JSON.stringify({ event: "admin_denied", reason: "not configured" }));
+    return c.text("Admin is not configured.", 503);
+  }
+
+  if (passwordReady && (await verifySession(c.env.SESSION_SECRET, getCookie(c, SESSION_COOKIE), new Date()))) {
+    c.set("who", c.env.ADMIN_EMAIL || "owner");
+    c.set("via", "password");
+    return next();
+  }
+
+  if (accessReady) {
+    const result = await verifyAccess(c.req.raw, c.env);
+    if (result.ok) {
+      c.set("who", result.email);
+      c.set("via", result.via);
+      return next();
+    }
+    if (!passwordReady) {
+      console.log(JSON.stringify({ event: "admin_denied", status: result.status, reason: result.reason }));
+      return c.text("Forbidden", result.status);
+    }
+  }
+
+  console.log(JSON.stringify({ event: "admin_denied", reason: "no session" }));
+  if (c.req.method !== "GET") return c.text("Forbidden", 403);
+  return c.redirect("/admin/login", 302);
+});
+
+/* ---------- Login / logout ---------- */
+
+admin.get("/login", (c) => page(c, <LoginPage />));
+
+admin.post("/login", bodyLimit({ maxSize: 4 * 1024 }), async (c) => {
+  const now = new Date();
+  const ip = clientIp(c.req.raw);
+
+  if (await tooManyAttempts(c.env.DB, ip, now)) {
+    console.log(JSON.stringify({ event: "admin_login", outcome: "rate_limited", ip }));
+    return page(c, <LoginPage error="Too many attempts. Try again in 15 minutes." />, 429);
+  }
+
+  const form = await c.req.parseBody();
+  const password = typeof form["password"] === "string" ? form["password"] : "";
+  if (!(await verifyPassword(password, c.env.ADMIN_PASSWORD_HASH))) {
+    await recordFailure(c.env.DB, ip, now);
+    console.log(JSON.stringify({ event: "admin_login", outcome: "failed", ip }));
+    return page(c, <LoginPage error="Wrong password." />, 401);
+  }
+
+  await clearAttempts(c.env.DB, ip);
+  setCookie(c, SESSION_COOKIE, await createSession(c.env.SESSION_SECRET ?? "", now), {
+    path: "/admin",
+    httpOnly: true,
+    // Local dev runs on http://localhost, where a Secure cookie would be dropped.
+    secure: new URL(c.req.url).protocol === "https:",
+    sameSite: "Strict",
+    maxAge: SESSION_TTL_SECONDS,
+  });
+  console.log(JSON.stringify({ event: "admin_login", outcome: "ok", ip }));
+  return c.redirect("/admin", 303);
+});
+
+admin.post("/logout", (c) => {
+  deleteCookie(c, SESSION_COOKIE, { path: "/admin" });
+  return c.redirect("/admin/login", 303);
 });
 
 function adminLang(raw: string | undefined): Lang {

@@ -84,22 +84,31 @@ strong { font-weight: 700; }
 .lead { font-size: clamp(1.15rem, 2vw, 1.35rem); color: var(--fg-soft); }
 .note { color: var(--fg-soft); font-size: 0.95rem; }
 .mt { margin-top: 1.2rem; }
+.inline-form { display: inline; }
 
-/* Hero */
-.hero { padding: clamp(3rem, 8vw, 6rem) 0 clamp(2rem, 5vw, 4rem); }
+/* Hero — the business card: role, name, portrait */
+.hero { padding: clamp(2.5rem, 6vw, 4.5rem) 0 clamp(2rem, 5vw, 3.5rem); }
 .hero .actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-top: 1.5rem; }
+.hero-grid { display: grid; gap: clamp(1.5rem, 4vw, 3rem); grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr); align-items: center; }
+.hero-portrait { width: min(320px, 100%); margin-inline: auto; }
+.tagline { font-family: var(--serif); font-weight: 700; font-size: clamp(1.35rem, 2.6vw, 1.9rem); line-height: 1.25; margin: 0 0 0.8rem; }
+@media (max-width: 760px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-portrait { order: -1; width: min(220px, 60%); margin-inline: 0; }
+}
 
-/* Buttons */
-.btn { display: inline-block; background: var(--crimson); color: #fff; font-weight: 700; padding: 0.85rem 1.4rem; border-radius: var(--radius); text-decoration: none; border: 0; cursor: pointer; font-family: var(--sans); font-size: 1rem; }
+/* Buttons — restrained: one solid accent, never full-bleed */
+.btn { display: inline-block; background: var(--crimson); color: #fff; font-weight: 600; padding: 0.7rem 1.15rem; border-radius: var(--radius); text-decoration: none; border: 0; cursor: pointer; font-family: var(--sans); font-size: 0.975rem; justify-self: start; }
 .btn:hover { background: var(--crimson-deep); color: #fff; }
-.btn.secondary { background: transparent; color: var(--fg); border: 1px solid var(--border); }
+.btn.secondary { background: transparent; color: var(--fg); border: 1px solid var(--border); font-weight: 500; }
+.btn.secondary:hover { background: var(--bg-2); color: var(--fg); }
 
 /* Cards */
 .cards { display: grid; gap: 1.2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
 .card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.4rem; display: flex; flex-direction: column; }
 .card h3 { margin-bottom: 0.3rem; }
-.card .meta { color: var(--fg-soft); font-size: 0.9rem; margin-bottom: 0.9rem; }
-.card .price { font-family: var(--serif); font-weight: 700; font-size: 1.25rem; margin-top: auto; padding-top: 0.8rem; }
+.card .meta { color: var(--fg-soft); font-size: 0.9rem; margin-bottom: 0.9rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+.chip { background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 0.1rem 0.6rem; font-size: 0.82rem; }
 .card details { margin-top: 0.8rem; }
 .card summary { cursor: pointer; font-weight: 600; color: var(--crimson); }
 .card details ul { margin-top: 0.6rem; }
@@ -119,7 +128,8 @@ strong { font-weight: 700; }
 table { border-collapse: collapse; width: 100%; min-width: 520px; }
 th, td { text-align: left; padding: 0.8rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
 th { font-family: var(--sans); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--fg-soft); }
-td.price { font-family: var(--serif); font-weight: 700; white-space: nowrap; }
+/* The number is the last column and stays the same size as the row — no shouting. */
+td.price { white-space: nowrap; font-weight: 600; }
 
 /* About */
 .portrait { width: min(360px, 100%); border-radius: var(--radius); border: 1px solid var(--border); }
@@ -145,3 +155,42 @@ textarea { min-height: 7rem; resize: vertical; }
 .admin .row { display: flex; gap: 1rem; flex-wrap: wrap; align-items: end; }
 
 @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+
+/* ---------- One-page layout additions ---------- */
+
+/* Anchored sections stop below the header instead of under it */
+section[id] { scroll-margin-top: 1rem; }
+html { scroll-behavior: smooth; }
+
+/* Hero contact row — email, LinkedIn, calendar, GitHub — directly under the name */
+.contact-row { list-style: none; padding: 0; margin: 0.6rem 0 0; display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; font-size: 0.95rem; }
+.contact-row a { color: var(--fg); text-decoration-color: var(--border); }
+.contact-row a:hover { color: var(--crimson); }
+
+/* Cards: result and client involvement lines */
+.card-result, .card-involvement { font-size: 0.95rem; }
+.card-involvement { color: var(--fg-soft); }
+@media (min-width: 900px) { .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Process band: the aside shares the band's colours */
+.band-aside { padding-top: 0.3rem; }
+
+/* Pricing table: a table on wide screens, labelled blocks on phones — no horizontal scroll */
+table.pricing { min-width: 0; }
+table.pricing td.row-title { font-weight: 600; }
+@media (max-width: 640px) {
+  table.pricing thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  table.pricing tr { display: block; padding: 0.7rem 0; border-bottom: 1px solid var(--border); }
+  table.pricing td { display: flex; justify-content: space-between; gap: 1rem; border: 0; padding: 0.15rem 0; }
+  table.pricing td::before { content: attr(data-label); color: var(--fg-soft); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; }
+  table.pricing td.row-title { display: block; }
+  table.pricing td.row-title::before { display: none; }
+}
+
+/* Touch targets and tap comfort */
+.nav a, .contact-row a { padding: 0.35rem 0; display: inline-block; }
+
+/* Tap targets ≥ 44px without moving anything: pad the hit area, pull it back with margins */
+.contact-row a, .site-footer .links a, .site-footer p a { display: inline-block; padding: 0.65rem 0.3rem; margin: -0.65rem -0.3rem; }
+.lang-toggle { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; }
+.wordmark { display: inline-flex; align-items: center; min-height: 44px; }

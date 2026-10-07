@@ -44,10 +44,10 @@ export async function verifyAccess(request: Request, env: AccessEnv, resolveJwks
 
   const teamDomain = env.ACCESS_TEAM_DOMAIN?.trim();
   const audience = env.ACCESS_AUD?.trim();
-  const allowed = env.ADMIN_EMAIL?.trim().toLowerCase();
+  const allowed = allowedEmails(env);
   // All three are required: without ADMIN_EMAIL any identity Access lets through (including a
   // service token, which carries no email) would be admitted.
-  if (!teamDomain || !audience || !allowed) {
+  if (!teamDomain || !audience || allowed.length === 0) {
     return { ok: false, status: 503, reason: "admin not configured" };
   }
 
@@ -66,7 +66,15 @@ export async function verifyAccess(request: Request, env: AccessEnv, resolveJwks
   }
 
   const email = typeof payload["email"] === "string" ? payload["email"].trim().toLowerCase() : "";
-  if (!email || email !== allowed) return { ok: false, status: 403, reason: "identity not allowed" };
+  if (!email || !allowed.includes(email)) return { ok: false, status: 403, reason: "identity not allowed" };
 
   return { ok: true, email, via: "access" };
+}
+
+/** ADMIN_EMAIL may list several addresses, comma-separated — she signs in from two Google accounts. */
+export function allowedEmails(env: AccessEnv): string[] {
+  return (env.ADMIN_EMAIL ?? "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter((e) => e.length > 0);
 }

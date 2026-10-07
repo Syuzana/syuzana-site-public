@@ -47,6 +47,9 @@ export const AdminPage: FC<AdminProps> = ({ c, lang, keys, who, via, flash, asse
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="noindex, nofollow" />
         <title>Admin — syuzana.com</title>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="stylesheet" href="/styles.css" />
       </head>
       <body class="admin">
@@ -65,6 +68,13 @@ export const AdminPage: FC<AdminProps> = ({ c, lang, keys, who, via, flash, asse
               <span class="note">
                 {who} · {via}
               </span>
+              {via === "password" ? (
+                <form method="post" action="/admin/logout" class="inline-form">
+                  <button class="lang-toggle" type="submit">
+                    Sign out
+                  </button>
+                </form>
+              ) : null}
             </nav>
           </div>
         </header>

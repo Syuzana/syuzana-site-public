@@ -11,6 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "seed:build": "node scripts/build-seed.mjs",
+    "favicon:build": "node scripts/build-favicon.mjs",
+    "admin:password": "node scripts/make-password.mjs",
     "db:migrate:local": "wrangler d1 migrations apply syuzana-site-content --local",
     "db:migrate:remote": "wrangler d1 migrations apply syuzana-site-content --remote",
     "publish:public": "bash scripts/publish-public.sh"
@@ -21,6 +23,7 @@
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.22.0",
+    "sharp": "^0.35.5",
     "typescript": "^5",
     "vitest": "^4.1.11",
     "wrangler": "^4"

@@ -7,8 +7,15 @@ ENVIRONMENT=development
 # Local only: lets you open /admin without Cloudflare Access. Never set in production.
 ADMIN_DEV_BYPASS=true
 
-# Cloudflare Access (Zero Trust) — the team domain is <team>.cloudflareaccess.com,
-# the AUD is the application's Audience tag. Both are shown in the Access app settings.
+# Password login for /admin (the default). Generate the hash with:
+#   npm run admin:password -- 'your-password'
+# and set both values as secrets. Without BOTH, password login stays off.
+ADMIN_PASSWORD_HASH=
+SESSION_SECRET=
+
+# Optional, stronger alternative: Cloudflare Access (Zero Trust). The team domain is
+# <team>.cloudflareaccess.com and the AUD is the application's Audience tag; both appear in
+# the Access application's settings. When configured, a valid Access token is accepted too.
 ACCESS_TEAM_DOMAIN=
 ACCESS_AUD=
 

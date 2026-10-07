@@ -9,8 +9,17 @@ export type PageProps = PropsWithChildren<{
   path: string;
   title: string;
   description?: string;
-  active?: "home" | "pricing" | "about" | "contact";
 }>;
+
+/** One-page site: the nav is a row of anchors into the home page. */
+const NAV: ReadonlyArray<[string, string]> = [
+  ["situations", "nav.situations"],
+  ["formats", "nav.formats"],
+  ["process", "nav.process"],
+  ["experience", "nav.experience"],
+  ["pricing", "nav.pricing"],
+  ["contact", "nav.contact"],
+];
 
 /** An admin-entered link, or "" when unset or not http(s)/mailto/relative. */
 export function link(c: Content, key: string): string {
@@ -48,13 +57,8 @@ export const SectionHead: FC<{ c: Content; titleKey: string; kicker?: string }> 
   </>
 );
 
-export const Layout: FC<PageProps> = ({ c, lang, path, title, description, active, children }) => {
+export const Layout: FC<PageProps> = ({ c, lang, path, title, description, children }) => {
   const other = otherLang(lang);
-  const navItem = (key: PageProps["active"], href: string, labelKey: string) => (
-    <a href={`/${lang}${href}`} aria-current={active === key ? "page" : undefined}>
-      {c.get(labelKey)}
-    </a>
-  );
   return (
     <html lang={lang}>
       <head>
@@ -69,6 +73,9 @@ export const Layout: FC<PageProps> = ({ c, lang, path, title, description, activ
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&family=PT+Serif:wght@400;700&display=swap"
         />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="stylesheet" href="/styles.css" />
       </head>
       <body>
@@ -78,10 +85,9 @@ export const Layout: FC<PageProps> = ({ c, lang, path, title, description, activ
               syuzana.com
             </a>
             <nav class="nav" aria-label="Main">
-              {navItem("home", "/", "nav.home")}
-              {navItem("pricing", "/pricing", "nav.pricing")}
-              {navItem("about", "/about", "nav.about")}
-              {navItem("contact", "/contact", "nav.contact")}
+              {NAV.map(([anchor, labelKey]) => (
+                <a href={`/${lang}/#${anchor}`}>{c.get(labelKey)}</a>
+              ))}
               <a class="lang-toggle" href={switchLangPath(path, other)} hreflang={other} lang={other}>
                 {other.toUpperCase()}
               </a>
@@ -111,7 +117,9 @@ export const Layout: FC<PageProps> = ({ c, lang, path, title, description, activ
             </div>
             {link(c, "contacts.github") && link(c, "contacts.channel") ? <Text c={c} k="footer.playful" /> : null}
             {link(c, "contacts.channel") ? <Text c={c} k="footer.channel_line" /> : null}
-            <p class="note">© {new Date().getUTCFullYear()} {c.get("site.name")}</p>
+            <p class="note">
+              © {new Date().getUTCFullYear()} {c.get("site.name")} · <a href="#top">↑</a>
+            </p>
           </div>
         </footer>
       </body>
