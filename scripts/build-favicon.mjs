@@ -1,12 +1,16 @@
-// Generates the site favicon: a Lorenz attractor in the design-system palette.
+// Generates the site favicon: the Lorenz attractor in the design-system palette.
 // Run `npm run favicon:build` after changing anything here; outputs go to public/.
-// Tweak without editing: FAVICON_TRANSIENT, FAVICON_STEPS, FAVICON_STROKE (see the defaults below);
-// FAVICON_PREVIEW_DIR=<dir> also writes 16/32/64/256 px previews there.
 //
 //   public/favicon.svg          vector, used by modern browsers
 //   public/favicon.ico          16 + 32 px PNG-in-ICO fallback
-//   public/apple-touch-icon.png 180 px, iOS home screen
-//   public/icon-512.png         512 px, for manifests / previews
+//   public/apple-touch-icon.png 180 px, square corners (iOS rounds it itself)
+//   public/icon-512.png         512 px, for manifests and link previews
+//
+// FAVICON_PREVIEW_DIR=<dir> also writes 16/32/64/256 px previews there.
+//
+// The parameters below are tuned for 16 px, not for the large render: fewer orbits and a
+// thick line keep the butterfly readable in a tab. A cream separation stroke under every
+// coloured one stops successive loops from merging into a blot.
 
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -16,29 +20,35 @@ const OUT = path.resolve("public");
 const SIZE = 64; // viewBox units
 
 // Design tokens (public/styles.css).
-const INK = "#1e1a19";
+const PAPER = "#f3eee6";
 const CRIMSON = "#be1e2d";
-const PURPLE = "#6e5a86";
+const CRIMSON_DEEP = "#7e1620";
+
+// Mark geometry.
+const TRANSIENT = 9000; // steps dropped so the orbit sits on the attractor
+const STEPS = 1150; // steps kept
+const STROKE = 3.3;
+const SEPARATION = 0.9; // extra width of the paper-coloured stroke under each line
+const MARGIN = 8;
+const RADIUS = 0.22; // badge corner radius, as a fraction of SIZE
+const RIM = 1.6; // crimson rim, so the badge keeps an edge on a light browser toolbar
 
 // --- Lorenz system ------------------------------------------------------
 const SIGMA = 10;
 const RHO = 28;
 const BETA = 8 / 3;
 const DT = 0.004;
-const env = (k, d) => (process.env[k] ? Number(process.env[k]) : d);
-const TRANSIENT = env("FAVICON_TRANSIENT", 9000); // steps dropped so the orbit sits on the attractor
-const STEPS = env("FAVICON_STEPS", 3000); // steps kept: a few loops around each wing
+const derivative = ([x, y, z]) => [SIGMA * (y - x), x * (RHO - z) - y, x * y - BETA * z];
 
 function integrate() {
   let [x, y, z] = [1, 1, 1];
   const pts = [];
   for (let i = 0; i < TRANSIENT + STEPS; i++) {
     // RK4 keeps the loops smooth at this step size.
-    const f = ([x, y, z]) => [SIGMA * (y - x), x * (RHO - z) - y, x * y - BETA * z];
-    const k1 = f([x, y, z]);
-    const k2 = f([x + (DT / 2) * k1[0], y + (DT / 2) * k1[1], z + (DT / 2) * k1[2]]);
-    const k3 = f([x + (DT / 2) * k2[0], y + (DT / 2) * k2[1], z + (DT / 2) * k2[2]]);
-    const k4 = f([x + DT * k3[0], y + DT * k3[1], z + DT * k3[2]]);
+    const k1 = derivative([x, y, z]);
+    const k2 = derivative([x + (DT / 2) * k1[0], y + (DT / 2) * k1[1], z + (DT / 2) * k1[2]]);
+    const k3 = derivative([x + (DT / 2) * k2[0], y + (DT / 2) * k2[1], z + (DT / 2) * k2[2]]);
+    const k4 = derivative([x + DT * k3[0], y + DT * k3[1], z + DT * k3[2]]);
     x += (DT / 6) * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]);
     y += (DT / 6) * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]);
     z += (DT / 6) * (k1[2] + 2 * k2[2] + 2 * k3[2] + k4[2]);
@@ -47,14 +57,13 @@ function integrate() {
   return pts;
 }
 
-// Project onto the x–z plane (the classic butterfly) and fit into the box.
+/** Project onto the x–z plane (the classic butterfly) and fit the box. */
 function project(pts) {
   const xs = pts.map((p) => p[0]);
   const zs = pts.map((p) => p[2]);
   const [minX, maxX] = [Math.min(...xs), Math.max(...xs)];
   const [minZ, maxZ] = [Math.min(...zs), Math.max(...zs)];
-  const margin = 7;
-  const scale = Math.min((SIZE - 2 * margin) / (maxX - minX), (SIZE - 2 * margin) / (maxZ - minZ));
+  const scale = Math.min((SIZE - 2 * MARGIN) / (maxX - minX), (SIZE - 2 * MARGIN) / (maxZ - minZ));
   const cx = (minX + maxX) / 2;
   const cz = (minZ + maxZ) / 2;
   return pts.map(([x, , z]) => ({
@@ -64,7 +73,7 @@ function project(pts) {
   }));
 }
 
-// One polyline per run of points on the same wing, so each wing keeps its colour.
+/** One polyline per run of points on the same wing, so each wing keeps its colour. */
 function wingRuns(points) {
   const runs = [];
   let run = null;
@@ -78,25 +87,30 @@ function wingRuns(points) {
   return runs;
 }
 
-function svg(points) {
-  const colour = { left: PURPLE, right: CRIMSON };
-  const paths = wingRuns(points)
+function svg({ radius = RADIUS } = {}) {
+  const colour = { left: CRIMSON_DEEP, right: CRIMSON };
+  const body = wingRuns(project(integrate()))
     .map((r) => {
       const d = r.pts.map((p, i) => `${i ? "L" : "M"}${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join("");
-      return `<path d="${d}" stroke="${colour[r.wing]}"/>`;
+      return (
+        `<path d="${d}" stroke="${PAPER}" stroke-width="${(STROKE + SEPARATION).toFixed(2)}"/>` +
+        `<path d="${d}" stroke="${colour[r.wing]}" stroke-width="${STROKE}"/>`
+      );
     })
-    .join("\n    ");
+    .join("");
+  const rim = radius
+    ? `<rect x="${RIM / 2}" y="${RIM / 2}" width="${SIZE - RIM}" height="${SIZE - RIM}" rx="${(SIZE * radius - RIM / 2).toFixed(2)}" fill="none" stroke="${CRIMSON}" stroke-width="${RIM}"/>`
+    : "";
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${SIZE} ${SIZE}" width="${SIZE}" height="${SIZE}">
   <title>syuzana.com — Lorenz attractor</title>
-  <rect width="${SIZE}" height="${SIZE}" rx="${SIZE * 0.22}" fill="${INK}"/>
-  <g fill="none" stroke-width="${env("FAVICON_STROKE", 1.2)}" stroke-linecap="round" stroke-linejoin="round" opacity="0.92">
-    ${paths}
-  </g>
+  <rect width="${SIZE}" height="${SIZE}" rx="${(SIZE * radius).toFixed(2)}" fill="${PAPER}"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">${body}</g>
+  ${rim}
 </svg>
 `;
 }
 
-// ICO container holding PNG entries (every current browser accepts PNG-in-ICO).
+/** ICO container holding PNG entries (every current browser accepts PNG-in-ICO). */
 function ico(pngs) {
   const header = Buffer.alloc(6);
   header.writeUInt16LE(0, 0);
@@ -108,8 +122,6 @@ function ico(pngs) {
     const e = Buffer.alloc(16);
     e.writeUInt8(size >= 256 ? 0 : size, 0);
     e.writeUInt8(size >= 256 ? 0 : size, 1);
-    e.writeUInt8(0, 2);
-    e.writeUInt8(0, 3);
     e.writeUInt16LE(1, 4);
     e.writeUInt16LE(32, 6);
     e.writeUInt32LE(buf.length, 8);
@@ -127,23 +139,24 @@ async function png(svgText, size) {
     .toBuffer();
 }
 
-const svgText = svg(project(integrate()));
+const rounded = svg();
+const squared = svg({ radius: 0 }); // iOS applies its own mask; transparent corners would go black
+
 await mkdir(OUT, { recursive: true });
-await writeFile(path.join(OUT, "favicon.svg"), svgText);
-await writeFile(path.join(OUT, "apple-touch-icon.png"), await png(svgText, 180));
-await writeFile(path.join(OUT, "icon-512.png"), await png(svgText, 512));
+await writeFile(path.join(OUT, "favicon.svg"), rounded);
+await writeFile(path.join(OUT, "apple-touch-icon.png"), await png(squared, 180));
+await writeFile(path.join(OUT, "icon-512.png"), await png(rounded, 512));
 await writeFile(
   path.join(OUT, "favicon.ico"),
   ico([
-    { size: 16, buf: await png(svgText, 16) },
-    { size: 32, buf: await png(svgText, 32) },
+    { size: 16, buf: await png(rounded, 16) },
+    { size: 32, buf: await png(rounded, 32) },
   ]),
 );
 
-// Previews for eyeballing at tab size (scratch only, not committed).
 if (process.env.FAVICON_PREVIEW_DIR) {
   const dir = process.env.FAVICON_PREVIEW_DIR;
   await mkdir(dir, { recursive: true });
-  for (const s of [16, 32, 64, 256]) await writeFile(path.join(dir, `preview-${s}.png`), await png(svgText, s));
+  for (const s of [16, 32, 64, 256]) await writeFile(path.join(dir, `preview-${s}.png`), await png(rounded, s));
 }
 console.log("favicon written to public/");

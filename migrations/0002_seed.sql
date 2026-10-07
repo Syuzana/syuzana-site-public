@@ -3,97 +3,78 @@
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('site.name', 'ru', 'Сюзана Тевдорадзе', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('site.role', 'ru', 'Technical Product Owner · AI и дата-продукты', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('site.description', 'ru', 'Технический продакт для AI- и дата-продуктов: решения о том, что строить, как довести до production и при какой экономике.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('nav.situations', 'ru', 'Ситуации', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('nav.situations', 'ru', 'Задачи', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('nav.formats', 'ru', 'Форматы', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('nav.process', 'ru', 'Как работаю', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('nav.experience', 'ru', 'Опыт', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('nav.pricing', 'ru', 'Цены', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('nav.contact', 'ru', 'Контакты', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.role', 'ru', 'Technical Product Owner · AI и дата-продукты', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.title', 'ru', 'Что строить, как довести до production и при какой экономике', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.lead', 'ru', 'Веду AI- и дата-продукты от решения до работающей системы. Разбираюсь в качестве моделей и данных, в легаси и инфраструктуре, в стоимости эксплуатации и ручных операциях — и помогаю принять решение, за которое команда сама не берётся.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.cta', 'ru', 'Договориться о знакомстве', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.note', 'ru', '20–40 минут, бесплатно.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.title', 'ru', 'Стратегия и развитие AI-продуктов', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.lead', 'ru', 'Я продакт-лид с техническим бэкграундом. Работаю с AI-продуктами и продуктами на данных: определяю приоритеты, оцениваю экономику и технические ограничения, веду реализацию вместе с командой. Обычно начинаю с фокуса: функция продукта, основная боль, рынок и сегмент. Дальше расчёт, окупится ли продукт, цели (OKR/KPI) и роадмап. На этом основании основатель принимает решение о запуске, развитии или остановке.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.cta', 'ru', 'Записаться бесплатно', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.note', 'ru', 'Первая консультация, 20–40 минут онлайн: вы рассказываете задачу, я говорю, чем могу помочь и нужна ли вам вообще.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.contacts_label', 'ru', 'Связаться', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('problems.title', 'ru', 'С чем ко мне приходят', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('problems.items', 'ru', '- AI-фича «почти работает» уже который месяц. Деньги уходят, а решение — докручивать, менять подход или останавливать — никто не принимает.
-- Продукт строится или уже работает, но непонятно, за что платят клиенты и сходится ли экономика, если честно посчитать инфраструктуру, разметку, ручную проверку и поддержку.
-- Есть идея AI-продукта, и нужно понять, стоит ли в неё вкладываться, **до** найма разработчиков.
-- В команде нет продакта: решения, роадмап и разговоры с заказчиками лежат на фаундере или на техлиде.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('problems.items', 'ru', '- Перед запуском AI-продукта нужно оценить спрос, техническую реализуемость и экономику, чтобы принять решение об инвестициях.
+- Нужен понятный план разработки: что делаем первым, что потом, сколько это стоит и по каким метрикам поймём, что получается.
+- В продукт встраивают AI-функцию, например распознавание, рекомендации или ассистента. Сроки сдвигаются, качество не дотягивает до нужного, расходы на модели и разметку растут. Нужно решить, продолжать, менять подход или останавливать.
+- Непонятно, за что клиенты готовы платить и окупается ли продукт с учётом инфраструктуры, разметки, ручной проверки и поддержки.
+- В команде нет продакт-менеджера. Основателю или техническому руководителю нужна помощь с исследованиями, приоритетами и управлением разработкой.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.title', 'ru', 'Форматы работы', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.intro', 'ru', 'Четыре формата — от разбора одной застрявшей фичи до работы внутри команды. Объём, срок и цену фиксируем письменно после знакомства.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.intro', 'ru', 'Два проектных формата и один в команде. Начинаем с бесплатной первой консультации, затем письменно фиксируем объём, срок и цену.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.involvement_label', 'ru', 'Что нужно от вас', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.result_label', 'ru', 'Результат', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.inside_label', 'ru', 'Что внутри', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.title', 'ru', 'Разбор продукта или AI-фичи', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.title', 'ru', 'Аудит действующего AI-продукта', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.duration', 'ru', '1–2 недели', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.body', 'ru', 'Для продукта или фичи, которые уже делаются и не сходятся: по качеству, по срокам или по деньгам. Интервью с пользователями здесь не нужны — работаю с кодом, данными, метриками и командой.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.inside', 'ru', '- Качество моделей и данных: что измеряется, что нет, где настоящий предел
-- Архитектура и легаси: что мешает, что можно не трогать
-- Стоимость эксплуатации на клиента: инфраструктура, разметка, ручные операции, поддержка
-- Экономика на одну страницу', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.involvement', 'ru', 'Доступ к коду, данным и метрикам; две-три встречи с командой.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.result', 'ru', 'Письменная рекомендация: продолжать, менять подход или останавливать — с разделением на то, что подтверждено, что остаётся гипотезой и чего пока неизвестно. И план ближайших шагов.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.demand.title', 'ru', 'Проверка спроса', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.demand.duration', 'ru', '2–3 недели', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.demand.body', 'ru', 'Для идеи или раннего продукта перед большими тратами. Здесь основной инструмент — разговоры с аудиторией: один сегмент, один основной сценарий.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.demand.inside', 'ru', '- Что пишут в отзывах на конкурентов и чем люди обходятся сейчас
-- 5–8 интервью с вашей аудиторией, включая тех, кто не купил
-- Карта рисков: какое предположение самое опасное
-- Экономика на одну страницу', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.demand.involvement', 'ru', 'Респондентов и доступ к данным обеспечиваете вы; если аудиторию нужно искать — это отдельный объём.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.demand.result', 'ru', 'Обоснованная рекомендация — стоит ли строить и что именно, — с указанием того, что подтверждено, а что пока гипотеза, и план самого дешёвого следующего теста.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.mvp.title', 'ru', 'Первая версия: от решения до плана запуска', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.mvp.duration', 'ru', '4–6 недель', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.mvp.body', 'ru', 'Для тех, у кого уже есть основания строить. Проверяем главные риски, определяем первую версию и способ убедиться, что за неё заплатят, — подходящий именно вашему продукту: страница с ценой, коммерческое предложение или платный пилот.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.mvp.inside', 'ru', '- Позиционирование: с чем вас на самом деле сравнивает покупатель
-- Проверка готовности платить — способом, который подходит продукту
-- Скоуп первой версии: что режем, чтобы проверить главный риск
-- План ближайших экспериментов; дальнейшие этапы — с условиями перехода', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.mvp.involvement', 'ru', 'Решения по продукту принимаете вы; страницу, аналитику и трафик для теста обсуждаем отдельно.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.mvp.result', 'ru', 'План первой версии и запуска. Если до этого была проверка спроса или разбор — их результаты входят, повторно работа не оплачивается.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.title', 'ru', 'Продакт-лид в вашей команде', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.body', 'ru', 'Разбираю качество моделей и данных, реальное использование и стоимость работы продукта. Нахожу, что мешает, и что можно не трогать.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.inside', 'ru', '- Что клиенты реально используют и за что платят, а что лежит мёртвым грузом
+- Какую точность модели дают на реальных данных и где именно проваливаются
+- Во что обходится каждый клиент: инфраструктура, разметка, ручная проверка, поддержка
+- Что в архитектуре мешает развитию и в какой очередности это менять', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.involvement', 'ru', 'Доступ к системе, данным и метрикам; две-три встречи с командой.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.result', 'ru', 'План доработки: что чинить, что убрать, в какой очередности, с оценкой трудозатрат и стоимости эксплуатации. И вердикт: продолжать, менять подход или прекращать.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.title', 'ru', 'Продакт-лид на частичную занятость', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.duration', 'ru', '4 или 8 дней в месяц', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.body', 'ru', 'Для команд, где продукт живёт, а владельца у него нет. Четыре дня в месяц — решения, роадмап и еженедельный разбор с сильной командой, которая ведёт операционную работу сама. Восемь дней — плюс discovery и доставка моими руками.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.inside', 'ru', '- Стратегия и роадмап
-- Еженедельное discovery и метрики
-- Экономика решений, включая стоимость AI
-- Путь от прототипа до production и помощь с наймом постоянного продакта', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.involvement', 'ru', 'Начинаем с одного оплачиваемого месяца, без длинного обязательства.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.result', 'ru', 'Продукт, у которого есть владелец: принятые решения, работающий процесс и постоянный продакт, нанятый с моей помощью.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.body', 'ru', 'Беру продуктовую работу на себя: приоритеты, исследования, требования для разработчиков, приёмка результата, координация с командой.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.inside', 'ru', '- Приоритеты и роадмап
+- Исследования и метрики
+- Требования и приёмка
+- Экономика решений, включая стоимость AI', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.involvement', 'ru', 'Зону ответственности и цели согласуем перед началом; начинаем с одного оплачиваемого месяца.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.result', 'ru', 'У продукта появляется владелец: решения принимаются, требования написаны, разработка идёт по плану. Когда придёт время, помогаю нанять постоянного продакта.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('process.title', 'ru', 'Как это устроено', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('process.steps', 'ru', '- Знакомство, 20–40 минут: вы рассказываете ситуацию, я говорю, чем здесь может помочь разбор и нужна ли вам вообще я.
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('process.steps', 'ru', '- Первая консультация, бесплатно, 20–40 минут: вы рассказываете задачу, я говорю, чем могу помочь.
 - Письмо с объёмом, сроком и ценой. При согласованном объёме сумма не меняется.
 - Работа с коротким апдейтом раз в неделю.
 - Финальная встреча и письменный отчёт.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('process.principles', 'ru', '- Порог остановки записываем до старта: что будем считать неудачей, решаем заранее.
-- В отчёте различаю свидетельства и предположения: цитата из интервью — свидетельство, расчёт стоимости клиента без рекламного эксперимента — предположение.
-- Проекты — за согласованный результат, сопровождение — за согласованную загрузку, отдельные задачи — по часам.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('process.principles', 'ru', '- До старта записываем, что будем считать неудачей.
+- В отчёте отдельно отмечаю, что подтверждено данными, а что остаётся предположением.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.title', 'ru', 'Опыт', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.intro', 'ru', 'Несколько результатов из последних лет. Компании не называю — подробности в CV.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.intro', 'ru', 'Несколько результатов последних лет. Компании не называю, подробности в CV.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.items', 'ru', '- AI-мониторинг для теплиц: из более чем десяти моделей оставили четыре рабочие, перестроили разметку — средняя точность в production выросла с 0.6 до 0.9, ручной разметки стало меньше примерно на 95%.
 - Та же команда: переход на общие сервисы и мультитенантную инфраструктуру — облачные расходы на клиента снизились примерно в 10 раз, экономика стала положительной.
 - Государственная аналитика: NLP-система для 200–250 тысяч обращений в год — классификация, извлечение сущностей, маршрутизация; обработка ускорилась примерно в 5 раз, итоговое решение осталось за человеком.
 - Данные о мобильности: переход с построчного хранения на векторное — отчёт, который строился около трёх дней, стал строиться за полтора часа.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.types', 'ru', 'Чаще всего это компьютерное зрение и NLP в production, дата-платформы, легаси-системы, которые нужно оживить или заменить, и экономика AI-продуктов на ранней стадии.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('about.bio', 'ru', 'Технический продакт-оунер. Руковожу командами, вывожу AI-функции в production, считаю экономику решений — не только стоимость моделей, но и инфраструктуру, разметку, ручную проверку и поддержку.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.types', 'ru', 'Чаще всего это компьютерное зрение и NLP в production, дата-платформы, легаси-системы и экономика AI-продуктов на ранней стадии.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('about.bio', 'ru', 'Технический продакт-оунер: веду AI- и дата-продукты от решения до работающей системы и считаю, во что они обходятся в эксплуатации.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('about.cv_label', 'ru', 'Скачать CV (PDF)', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.title', 'ru', 'Цены', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.intro', 'ru', 'Ставка — **от €100 в час**; отдельные задачи — от двух часов, короче разбор обычно не получается. Проекты оцениваю в часах и продаю за согласованный результат фиксированной суммой; сопровождение — за согласованную загрузку в месяц.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.intro', 'ru', 'Ставка **от €100 в час**, отдельные задачи от двух часов. Объём проекта оцениваю в часах заранее и фиксирую письменно.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.columns', 'ru', 'Формат | Объём | Срок', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.rows', 'ru', 'Знакомство | 20–40 минут | —
-Разговор по делу | 1 час, €150 | в течение недели
-Разговор с письменным разбором | от 3 часов, от €350 | в течение недели
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.rows', 'ru', 'Первая консультация | 20–40 минут, бесплатно | —
+Консультация | 1 час, €150 | в течение недели
+Консультация с письменным разбором | от 3 часов, от €350 | в течение недели
 Отдельная задача | от 2 часов | по договорённости
-Разбор продукта или AI-фичи | от 20 часов | 1–2 недели
-Проверка спроса | от 30 часов | 2–3 недели
-Первая версия | от 60 часов | 4–6 недель
-Продакт-лид в команде | 4 или 8 дней в месяц | от 1 месяца
+Аудит действующего AI-продукта | от 20 часов | 1–2 недели
+Оценка нового продукта или направления | от 30 часов | 2–4 недели
+Продакт-лид на частичную занятость | 4 или 8 дней в месяц | от 1 месяца
 Полная занятость | полный день | по запросу', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.note', 'ru', 'Итоговую сумму, объём и срок фиксируем в письменном предложении после знакомства; при согласованном объёме она не меняется. Там же указываю, добавляются ли к сумме налоги.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.note', 'ru', 'Итоговую сумму, объём и срок фиксируем в письменном предложении после первой консультации. При согласованном объёме сумма не меняется. В предложении указано, добавляются ли налоги.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.title', 'ru', 'Контакты', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.body', 'ru', 'Напишите пару строк о ситуации — отвечу в течение двух рабочих дней. Или выберите время для разговора.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.booking_label', 'ru', 'Выбрать время в календаре', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.body', 'ru', 'Напишите пару строк о задаче, отвечу в течение двух рабочих дней. Или сразу запишитесь на бесплатную первую консультацию.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.booking_label', 'ru', 'Записаться на бесплатную консультацию', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.email_label', 'ru', 'Почта', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_title', 'ru', 'Или коротко здесь', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_name', 'ru', 'Имя', '1970-01-01T00:00:00Z');
@@ -102,7 +83,6 @@ INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.fo
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_send', 'ru', 'Отправить', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_ok', 'ru', 'Спасибо — отвечу в течение двух рабочих дней.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_error', 'ru', 'Не получилось отправить. Напишите, пожалуйста, на почту.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.playful', 'ru', 'Балуюсь вайбкодингом — [здесь]({github}) — и этикой данных — [здесь]({channel}).', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.channel_line', 'ru', 'Канал про этику данных и продуктовый анализ.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.linkedin_label', 'ru', 'LinkedIn', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.github_label', 'ru', 'GitHub', '1970-01-01T00:00:00Z');
@@ -110,100 +90,107 @@ INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.cha
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.calendar_label', 'ru', 'Календарь', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('notfound.title', 'ru', 'Такой страницы нет', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('notfound.body', 'ru', 'Вернуться на [главную](/ru/).', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.channel_title', 'ru', 'Канал «Принимаю условия»', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.channel_body', 'ru', 'Пишу про этику данных и продуктовый анализ: что мы на самом деле принимаем, нажимая «согласен», как устроены продукты, которые живут на наших данных, и как думать о продукте до того, как его строить.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.channel_cta', 'ru', 'Читать в Telegram', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.group_project', 'ru', 'Проектная работа', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.group_team', 'ru', 'Работа в команде', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.evaluate.title', 'ru', 'Оценка нового продукта или направления', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.evaluate.duration', 'ru', '2–4 недели', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.evaluate.body', 'ru', 'Разбираюсь, для кого продукт и какую задачу решает. Изучаю сегмент, альтернативы клиента и экономику. Вместе с основателем формулирую функцию продукта и границы первой версии.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.evaluate.result', 'ru', 'Стратегия разработки: что делаем первым и в каком порядке, какие метрики и бюджет, что проверяем до того, как писать код. И вердикт по направлению: запускать, подождать или переделать замысел.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.evaluate.involvement', 'ru', 'Респондентов и доступ к данным обеспечиваете вы.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.evaluate.inside', 'ru', '- Сегмент и альтернативы, которыми клиент пользуется сейчас
+- Интервью с аудиторией, включая тех, кто не купил
+- Экономика на одну страницу
+- Границы первой версии и порядок разработки', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.privacy_label', 'ru', 'Конфиденциальность', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('privacy.title', 'ru', 'Конфиденциальность', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('privacy.body', 'ru', '**Кто обрабатывает данные.** Сюзана Тевдорадзе, {email}.
+
+**Что и зачем собирается.** Форма на сайте передаёт мне имя, адрес почты и текст сообщения — только чтобы ответить вам. Запись на консультацию проходит через Google Calendar по его условиям. Статистика посещений — Cloudflare Web Analytics: без cookies и без идентификации посетителей, только агрегированные показатели.
+
+**Сколько хранится.** Сообщения — пока идёт переписка и не дольше 12 месяцев после её окончания, затем удаляются.
+
+**Ваши права.** Вы можете запросить копию своих данных, их исправление или удаление — напишите на {email}.
+
+**Cookies.** Сайт ставит одну техническую cookie с выбранным языком. Трекинговых cookies нет.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.telegram_label', 'ru', 'Telegram', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('site.name', 'en', 'Syuzana Tevdoradze', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('site.role', 'en', 'Technical Product Owner · AI and data products', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('site.description', 'en', 'Technical product lead for AI and data products: what to build, how to get it to production, and at what economics.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('nav.situations', 'en', 'Situations', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('nav.situations', 'en', 'Tasks', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('nav.formats', 'en', 'Ways to work', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('nav.process', 'en', 'How I work', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('nav.experience', 'en', 'Experience', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('nav.pricing', 'en', 'Pricing', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('nav.contact', 'en', 'Contact', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.role', 'en', 'Technical Product Owner · AI and data products', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.title', 'en', 'What to build, how to get it to production, and at what economics', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.lead', 'en', 'I take AI and data products from the decision to a working system. I can read model and data quality, legacy code and infrastructure, cost to serve and manual operations — and help make the decision a team won''t make on its own.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.cta', 'en', 'Arrange an introduction', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.note', 'en', '20–40 minutes, free.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.title', 'en', 'Strategy and growth of AI products', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.lead', 'en', 'I''m a product lead with a technical background. I work on AI and data products: set priorities, assess the economics and the technical constraints, and drive delivery together with the team. I usually start with focus: the product''s function, the main pain, the market and the segment. Then the numbers: will the product pay back, the goals (OKR/KPI) and the roadmap. On that basis the founder decides whether to launch, grow or stop.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.cta', 'en', 'Book a free call', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.note', 'en', 'A first consultation, 20–40 minutes online: you describe the task, I say how I can help and whether you need me at all.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.contacts_label', 'en', 'Get in touch', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('problems.title', 'en', 'What people come with', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('problems.items', 'en', '- An AI feature has "almost worked" for months. Money keeps going out, and nobody decides whether to push on, change the approach or stop.
-- The product is being built or already runs, but it isn''t clear what customers pay for, or whether the economics hold once infrastructure, labelling, manual checks and support are counted honestly.
-- There''s an AI product idea, and a need to know whether it''s worth investing in **before** hiring developers.
-- There''s no product owner: decisions, roadmap and customer conversations sit with the founder or the tech lead.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('problems.items', 'en', '- Before launching an AI product you need to assess demand, technical feasibility and economics to make the investment decision.
+- You need a clear development plan: what we build first, what comes next, what it costs, and which metrics will show it is working.
+- An AI feature is being built into the product, say recognition, recommendations or an assistant. Deadlines slip, quality falls short of what is needed, spending on models and labelling grows. You need to decide whether to continue, change the approach or stop.
+- It is unclear what customers will pay for, and whether the product pays back once infrastructure, labelling, manual checks and support are counted.
+- There is no product manager on the team. The founder or the tech lead needs help with research, priorities and managing development.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.title', 'en', 'Ways to work', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.intro', 'en', 'Four formats, from a review of one stuck feature to working inside the team. Scope, timeline and price are fixed in writing after the introduction.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.intro', 'en', 'Two project formats and one inside the team. We start with a free first consultation, then fix scope, timeline and price in writing.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.involvement_label', 'en', 'What I need from you', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.result_label', 'en', 'Result', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.inside_label', 'en', 'What''s inside', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.title', 'en', 'Product or AI-feature review', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.title', 'en', 'Audit of a live AI product', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.duration', 'en', '1–2 weeks', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.body', 'en', 'For a product or feature that is already in progress and doesn''t add up — on quality, on time, or on money. No user interviews here: I work with the code, the data, the metrics and the team.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.inside', 'en', '- Model and data quality: what is measured, what isn''t, where the real ceiling is
-- Architecture and legacy: what''s in the way, what can be left alone
-- Cost to serve per customer: infrastructure, labelling, manual operations, support
-- One-page economics', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.involvement', 'en', 'Access to code, data and metrics; two or three meetings with the team.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.result', 'en', 'A written recommendation — continue, change the approach, or stop — separating what is confirmed, what remains a hypothesis and what is still unknown. Plus a plan for the next steps.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.demand.title', 'en', 'Demand check', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.demand.duration', 'en', '2–3 weeks', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.demand.body', 'en', 'For an idea or an early product before serious spending. The main tool here is conversations with the audience: one segment, one core scenario.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.demand.inside', 'en', '- What reviews of competitors say, and what people use instead today
-- 5–8 interviews with your audience, including those who didn''t buy
-- Risk map: which assumption is the most dangerous
-- One-page economics', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.demand.involvement', 'en', 'You provide the respondents and access to data; if the audience has to be found first, that is separate scope.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.demand.result', 'en', 'A grounded recommendation — whether to build, and what exactly — stating what is confirmed and what is still a hypothesis, with a plan for the cheapest next test.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.mvp.title', 'en', 'First version: from decision to launch plan', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.mvp.duration', 'en', '4–6 weeks', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.mvp.body', 'en', 'For those who already have grounds to build. We test the main risks, define the first version, and choose a way to confirm people will pay for it that suits your product — a priced page, a commercial proposal, or a paid pilot.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.mvp.inside', 'en', '- Positioning: what buyers actually compare you with
-- Willingness-to-pay check, done the way that fits the product
-- First-version scope: what we cut to test the main risk
-- Plan for the next experiments; later stages with conditions for moving on', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.mvp.involvement', 'en', 'Product decisions stay with you; a page, analytics and traffic for a test are agreed separately.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.mvp.result', 'en', 'A plan for the first version and its launch. If a demand check or a review came before, their results are included — the work is not paid for twice.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.title', 'en', 'Product lead on your team', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.body', 'en', 'I examine model and data quality, real usage and the cost of running the product. I find what is in the way and what can be left alone.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.inside', 'en', '- What customers actually use and pay for, and what is dead weight
+- What accuracy the models reach on real data and exactly where they fail
+- What each customer costs to serve: infrastructure, labelling, manual checks, support
+- What in the architecture blocks development and in what order to change it', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.involvement', 'en', 'Access to the system, data and metrics; two or three sessions with the team.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.audit.result', 'en', 'A rework plan: what to fix, what to drop, in what order, with effort and running-cost estimates. And a verdict: continue, change the approach, or stop.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.title', 'en', 'Part-time product lead', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.duration', 'en', '4 or 8 days a month', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.body', 'en', 'For teams whose product is alive but has no owner. Four days a month: decisions, roadmap and a weekly review, with a strong team running the day-to-day. Eight days: plus discovery and delivery done by me.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.inside', 'en', '- Strategy and roadmap
-- Weekly discovery and metrics
-- Decision economics, including the cost of AI
-- The path from prototype to production, and help hiring a permanent product lead', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.involvement', 'en', 'We start with one paid month, with no long commitment.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.result', 'en', 'A product with an owner: decisions made, a working process, and a permanent product lead hired with my help.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.body', 'en', 'I take the product work on: priorities, research, requirements for the developers, acceptance of the result, coordination with the team.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.inside', 'en', '- Priorities and roadmap
+- Research and metrics
+- Requirements and acceptance
+- Decision economics, including the cost of AI', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.involvement', 'en', 'Scope of responsibility and goals are agreed before we start; we begin with one paid month.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.fractional.result', 'en', 'The product gets an owner: decisions are made, requirements are written, development follows the plan. When the time comes, I help hire a permanent product lead.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('process.title', 'en', 'How it works', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('process.steps', 'en', '- An introduction, 20–40 minutes: you describe the situation, I say what a review could do here and whether you need me at all.
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('process.steps', 'en', '- A first consultation, free, 20–40 minutes: you describe the task, I say how I can help.
 - A letter with scope, timeline and price. At the agreed scope the price doesn''t change.
 - The work, with a short weekly update.
 - A final session and a written report.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('process.principles', 'en', '- The stop threshold is written down before we start: what counts as failure is decided in advance.
-- In the report I separate evidence from assumptions: an interview quote is evidence; a customer-acquisition cost without an ad experiment is an assumption.
-- Projects are priced for an agreed result, retainers for an agreed load, single tasks by the hour.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('process.principles', 'en', '- Before we start, we write down what will count as failure.
+- In the report I mark separately what the data confirms and what remains an assumption.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.title', 'en', 'Experience', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.intro', 'en', 'A few results from recent years. Companies aren''t named here — details are in the CV.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.intro', 'en', 'A few results from recent years. Companies are not named; details are in the CV.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.items', 'en', '- AI monitoring for greenhouses: of more than ten detection models we kept the four that worked and rebuilt labelling — average production accuracy went from 0.6 to 0.9, manual annotation fell by about 95%.
 - Same team: a move to shared services and multi-tenant infrastructure cut cloud cost per customer by roughly 10x and turned the unit economics positive.
 - Government analytics: an NLP system for 200–250 thousand citizen requests a year — classification, entity extraction, routing; processing became about 5x faster, with a person making the final call.
 - Mobility data: moving from row-based to vector-based storage took a report from about three days to an hour and a half.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.types', 'en', 'Most often this is computer vision and NLP in production, data platforms, legacy systems that need reviving or replacing, and the economics of early-stage AI products.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('about.bio', 'en', 'Technical product owner. I lead teams, bring AI features to production, and do the economics of decisions — not just the cost of models, but infrastructure, labelling, manual checks and support.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('experience.types', 'en', 'Most often this is computer vision and NLP in production, data platforms, legacy systems and the economics of early-stage AI products.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('about.bio', 'en', 'Technical product owner: I take AI and data products from the decision to a working system, and I count what they cost to run.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('about.cv_label', 'en', 'Download CV (PDF)', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.title', 'en', 'Pricing', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.intro', 'en', 'The rate is **from €100 an hour**; single tasks start at two hours — a shorter review rarely works. Projects are estimated in hours and sold for an agreed result at a fixed sum; retainers for an agreed monthly load.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.intro', 'en', 'The rate is **from €100 an hour**, single tasks from two hours. Project scope is estimated in hours up front and fixed in writing.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.columns', 'en', 'Format | Scope | Duration', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.rows', 'en', 'Introduction | 20–40 minutes | —
-Working conversation | 1 hour, €150 | within a week
-Conversation with a written review | from 3 hours, from €350 | within a week
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.rows', 'en', 'First consultation | 20–40 minutes, free | —
+Consultation | 1 hour, €150 | within a week
+Consultation with a written review | from 3 hours, from €350 | within a week
 Single task | from 2 hours | by agreement
-Product or AI-feature review | from 20 hours | 1–2 weeks
-Demand check | from 30 hours | 2–3 weeks
-First version | from 60 hours | 4–6 weeks
-Product lead on your team | 4 or 8 days a month | from 1 month
+Audit of a live AI product | from 20 hours | 1–2 weeks
+Assessment of a new product or direction | from 30 hours | 2–4 weeks
+Part-time product lead | 4 or 8 days a month | from 1 month
 Full time | full days | on request', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.note', 'en', 'The final sum, scope and timeline are fixed in a written proposal after the introduction; at the agreed scope the sum doesn''t change. The proposal also states whether any taxes are added.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('pricing.note', 'en', 'The final sum, scope and timeline are fixed in a written proposal after the first consultation. At the agreed scope the sum doesn''t change. The proposal states whether any taxes are added.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.title', 'en', 'Contact', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.body', 'en', 'Send me a couple of lines about the situation — I reply within two working days. Or pick a time to talk.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.booking_label', 'en', 'Pick a time in the calendar', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.body', 'en', 'Send me a couple of lines about the task; I reply within two working days. Or book the free first consultation straight away.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.booking_label', 'en', 'Book the free consultation', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.email_label', 'en', 'Email', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_title', 'en', 'Or briefly, right here', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_name', 'en', 'Name', '1970-01-01T00:00:00Z');
@@ -212,7 +199,6 @@ INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.fo
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_send', 'en', 'Send', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_ok', 'en', 'Thank you — I''ll reply within two working days.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_error', 'en', 'Couldn''t send. Please email me instead.', '1970-01-01T00:00:00Z');
-INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.playful', 'en', 'I play around with vibecoding — [here]({github}) — and with data ethics — [here]({channel}).', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.channel_line', 'en', 'A channel on data ethics and product analysis.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.linkedin_label', 'en', 'LinkedIn', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.github_label', 'en', 'GitHub', '1970-01-01T00:00:00Z');
@@ -220,6 +206,32 @@ INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.cha
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.calendar_label', 'en', 'Calendar', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('notfound.title', 'en', 'There''s no such page', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('notfound.body', 'en', 'Back to the [home page](/en/).', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.channel_title', 'en', 'The channel: «I accept the terms»', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.channel_body', 'en', 'I write about data ethics and product analysis: what we really accept when we click "agree", how products that live on our data are built, and how to think about a product before building it.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.channel_cta', 'en', 'Read on Telegram', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.group_project', 'en', 'Project work', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.group_team', 'en', 'Work inside the team', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.evaluate.title', 'en', 'Assessment of a new product or direction', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.evaluate.duration', 'en', '2–4 weeks', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.evaluate.body', 'en', 'I work out who the product is for and which task it solves. I study the segment, the customer''s alternatives and the economics. Together with the founder I define the product''s function and the boundaries of the first version.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.evaluate.result', 'en', 'A development strategy: what we build first and in what order, which metrics and budget, what we test before writing code. And a verdict on the direction: launch, wait, or rethink.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.evaluate.involvement', 'en', 'Respondents and access to data come from you.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('formats.evaluate.inside', 'en', '- Segment and the alternatives customers use today
+- Interviews with the audience, including those who didn''t buy
+- One-page economics
+- First-version boundaries and the order of development', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.privacy_label', 'en', 'Privacy', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('privacy.title', 'en', 'Privacy', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('privacy.body', 'en', '**Who processes the data.** Syuzana Tevdoradze, {email}.
+
+**What is collected and why.** The form on this site sends me your name, email address and message — only so I can reply. Booking a consultation goes through Google Calendar under its terms. Visit statistics come from Cloudflare Web Analytics: no cookies, no visitor identification, aggregate figures only.
+
+**How long it is kept.** Messages — for the duration of our correspondence and no longer than 12 months after it ends; then they are deleted.
+
+**Your rights.** You can request a copy of your data, a correction or deletion — write to {email}.
+
+**Cookies.** The site sets one technical cookie with your chosen language. There are no tracking cookies.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.telegram_label', 'en', 'Telegram', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contacts.email', '*', '{{SET_IN_ADMIN}}', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contacts.linkedin', '*', '{{SET_IN_ADMIN}}', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contacts.github', '*', '{{SET_IN_ADMIN}}', '1970-01-01T00:00:00Z');

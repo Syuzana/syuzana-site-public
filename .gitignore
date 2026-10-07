@@ -28,3 +28,6 @@ coverage/
 # Archives / Finder artifacts (e.g. a zipped specs/ folder)
 *.zip
 __MACOSX/
+
+# Playwright MCP scratch output (screenshots, page snapshots)
+.playwright-mcp/

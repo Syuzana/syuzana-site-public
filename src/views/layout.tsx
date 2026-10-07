@@ -15,7 +15,6 @@ export type PageProps = PropsWithChildren<{
 const NAV: ReadonlyArray<[string, string]> = [
   ["situations", "nav.situations"],
   ["formats", "nav.formats"],
-  ["process", "nav.process"],
   ["experience", "nav.experience"],
   ["pricing", "nav.pricing"],
   ["contact", "nav.contact"],
@@ -66,13 +65,37 @@ export const Layout: FC<PageProps> = ({ c, lang, path, title, description, child
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{title}</title>
         <meta name="description" content={description ?? c.get("site.description")} />
-        <link rel="alternate" hreflang={other} href={switchLangPath(path, other)} />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&family=PT+Serif:wght@400;700&display=swap"
+        <link rel="alternate" hreflang={lang} href={`https://syuzana.com${path}`} />
+        <link rel="alternate" hreflang={other} href={`https://syuzana.com${switchLangPath(path, other)}`} />
+        <link rel="alternate" hreflang="x-default" href={`https://syuzana.com${switchLangPath(path, "en")}`} />
+        <link rel="canonical" href={`https://syuzana.com${path}`} />
+        <meta property="og:type" content="profile" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description ?? c.get("site.description")} />
+        <meta property="og:url" content={`https://syuzana.com${path}`} />
+        <meta property="og:image" content="https://syuzana.com/assets/photo" />
+        <meta property="og:image:alt" content={c.get("site.name")} />
+        <meta property="og:locale" content={lang === "ru" ? "ru_RU" : "en_GB"} />
+        <meta name="twitter:card" content="summary" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: c.get("site.name"),
+              jobTitle: c.get("site.role"),
+              description: c.get("site.description"),
+              url: "https://syuzana.com/",
+              image: "https://syuzana.com/assets/photo",
+              email: c.value("contacts.email") ? `mailto:${c.value("contacts.email")}` : undefined,
+              sameAs: [link(c, "contacts.linkedin"), link(c, "contacts.github"), link(c, "contacts.channel")].filter(Boolean),
+            }),
+          }}
         />
+        <link rel="preload" href="/fonts/pt-serif-700-cyrillic.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+        <link rel="preload" href="/fonts/pt-sans-400-cyrillic.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+        <link rel="stylesheet" href="/fonts.css" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon.ico" sizes="32x32" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -88,10 +111,10 @@ export const Layout: FC<PageProps> = ({ c, lang, path, title, description, child
               {NAV.map(([anchor, labelKey]) => (
                 <a href={`/${lang}/#${anchor}`}>{c.get(labelKey)}</a>
               ))}
-              <a class="lang-toggle" href={switchLangPath(path, other)} hreflang={other} lang={other}>
-                {other.toUpperCase()}
-              </a>
             </nav>
+            <a class="lang-toggle" href={switchLangPath(path, other)} hreflang={other} lang={other}>
+              {other.toUpperCase()}
+            </a>
           </div>
         </header>
         <main>{children}</main>
@@ -115,10 +138,18 @@ export const Layout: FC<PageProps> = ({ c, lang, path, title, description, child
               ) : null}
               {c.value("contacts.email") ? <a href={`mailto:${c.value("contacts.email")}`}>{c.value("contacts.email")}</a> : null}
             </div>
-            {link(c, "contacts.github") && link(c, "contacts.channel") ? <Text c={c} k="footer.playful" /> : null}
-            {link(c, "contacts.channel") ? <Text c={c} k="footer.channel_line" /> : null}
+            {link(c, "contacts.channel") ? (
+              <section class="channel-block" aria-label={c.get("footer.channel_title")}>
+                <h3>{c.get("footer.channel_title")}</h3>
+                <Text c={c} k="footer.channel_body" />
+                <a class="btn secondary" href={link(c, "contacts.channel")} rel="noopener">
+                  {c.get("footer.channel_cta")}
+                </a>
+              </section>
+            ) : null}
             <p class="note">
-              © {new Date().getUTCFullYear()} {c.get("site.name")} · <a href="#top">↑</a>
+              © {new Date().getUTCFullYear()} {c.get("site.name")} · <a href={`/${lang}/privacy`}>{c.get("footer.privacy_label")}</a> ·{" "}
+              <a href="#top" class="to-top" aria-label="Top">↑</a>
             </p>
           </div>
         </footer>

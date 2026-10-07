@@ -56,9 +56,10 @@ describe("public pages render from D1", () => {
     expect(res.status).toBe(200);
     const html = await res.text();
     expect(html.startsWith("<!doctype html>")).toBe(true);
-    expect(html).toContain("Что строить, как довести до production");
+    expect(html).toContain("Стратегия и развитие AI-продуктов");
     expect(html).toContain('lang="ru"');
-    expect(res.headers.get("Content-Security-Policy")).toContain("script-src 'none'");
+    expect(res.headers.get("Content-Security-Policy")).toContain("script-src https://static.cloudflareinsights.com");
+    expect(res.headers.get("Content-Security-Policy")).not.toContain("googleapis");
     expect(res.headers.get("Content-Security-Policy")).not.toContain("unsafe-inline");
     expect(res.headers.get("Strict-Transport-Security")).toContain("max-age=");
     expect(res.headers.get("X-Content-Type-Options")).toBe("nosniff");
@@ -83,10 +84,11 @@ describe("public pages render from D1", () => {
     expect(html).not.toMatch(/€\s?\d\s?\d{3}/);
 
   });
-  it("shows exactly four format cards, the technical review first", async () => {
+  it("shows three format cards in two groups: project work, then the team", async () => {
     const html = await (await request("/en/")).text();
-    expect(html.match(/class="card"/g)?.length).toBe(4);
-    expect(html.indexOf("Product or AI-feature review")).toBeLessThan(html.indexOf("Demand check"));
+    expect(html.match(/class="card"/g)?.length).toBe(3);
+    expect(html.indexOf("Project work")).toBeLessThan(html.indexOf("Work inside the team"));
+    expect(html.indexOf("Assessment of a new product")).toBeLessThan(html.indexOf("Part-time product lead"));
   });
   it("prices by rate and hours, not by package totals", async () => {
     const html = await (await request("/en/")).text();
@@ -99,6 +101,33 @@ describe("public pages render from D1", () => {
     const html = await (await request("/en/")).text();
     expect(html).not.toContain("SET_IN_ADMIN");
     expect(html).not.toContain('class="contact-row"');
+  });
+  it("shows the contact form only when a delivery webhook is configured", async () => {
+    expect(await (await request("/en/")).text()).not.toContain('action="/api/contact"');
+    const withHook = { ...prodEnv, CONTACT_WEBHOOK_URL: "https://script.google.com/macros/s/x/exec" } as Env;
+    expect(await (await request("/en/", {}, withHook)).text()).toContain('action="/api/contact"');
+  });
+  it("serves a privacy notice in both languages and links it from the footer", async () => {
+    const res = await request("/ru/privacy");
+    expect(res.status).toBe(200);
+    expect(await res.text()).toContain("Конфиденциальность");
+    expect(await (await request("/en/")).text()).toContain('href="/en/privacy"');
+  });
+  it("redirects www to the apex host", async () => {
+    const ctx = createExecutionContext();
+    const res = await app.fetch(new Request("https://www.syuzana.com/ru/?x=1"), prodEnv, ctx);
+    expect(res.status).toBe(301);
+    expect(res.headers.get("Location")).toBe("https://syuzana.com/ru/?x=1");
+    const http = await app.fetch(new Request("http://syuzana.com/en/"), prodEnv, createExecutionContext());
+    expect(http.status).toBe(301);
+    expect(http.headers.get("Location")).toBe("https://syuzana.com/en/");
+    // Exactly once: the https target itself is served, not redirected again.
+    const target = await app.fetch(new Request(http.headers.get("Location") ?? ""), prodEnv, createExecutionContext());
+    expect(target.status).toBe(200);
+  });
+  it("does not force https in local development, where wrangler dev presents the custom domain over http", async () => {
+    const res = await app.fetch(new Request("http://syuzana.com/en/"), devEnv, createExecutionContext());
+    expect(res.status).toBe(200);
   });
   it("returns a 404 in the language of the path", async () => {
     const res = await request("/ru/nope", { headers: { "Accept-Language": "en" } });

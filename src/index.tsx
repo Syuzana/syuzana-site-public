@@ -23,7 +23,7 @@ import { editableKeys, loadContent, saveContent } from "./content";
 import { DEFAULT_LANG, LANG_COOKIE, detectLang, isLang, type Lang } from "./i18n";
 import { ASSET_KEYS, MAX_BYTES, validateUpload, type AssetKind } from "./uploads";
 import { AdminPage } from "./views/admin";
-import { HomePage, NotFoundPage, plainErrorHtml } from "./views/pages";
+import { HomePage, NotFoundPage, PrivacyPage, plainErrorHtml } from "./views/pages";
 
 type Variables = { lang: Lang };
 type AppContext = Context<{ Bindings: Env; Variables: Variables }>;
@@ -46,10 +46,12 @@ app.use(
     xFrameOptions: "DENY",
     contentSecurityPolicy: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "https://fonts.googleapis.com"],
-      fontSrc: ["https://fonts.gstatic.com"],
+      styleSrc: ["'self'"],
+      fontSrc: ["'self'"],
       imgSrc: ["'self'", "data:"],
-      scriptSrc: ["'none'"],
+      // Cloudflare Web Analytics is injected by the platform (cookieless); allow only that origin.
+      scriptSrc: ["https://static.cloudflareinsights.com"],
+      connectSrc: ["'self'", "https://cloudflareinsights.com"],
       objectSrc: ["'none'"],
       frameAncestors: ["'none'"],
       formAction: ["'self'"],
@@ -65,6 +67,22 @@ app.onError((error, c) => {
   const err = error instanceof Error ? { name: error.name, message: error.message, stack: error.stack } : { message: String(error) };
   console.error(JSON.stringify({ event: "unhandled_error", path: c.req.path, ...err }));
   return c.html(plainErrorHtml("Something went wrong", "Please try again in a minute."), 500);
+});
+
+/* ---------- One canonical host: https, apex (www and http → 301) ---------- */
+
+app.use("*", async (c, next) => {
+  const url = new URL(c.req.url);
+  const isWww = url.hostname === "www.syuzana.com";
+  // `wrangler dev` rewrites the request URL to the custom domain over plain http, so forcing
+  // https there loops forever (syusite-g4e2). Behind Cloudflare the Worker always sees https.
+  const isHttp = url.protocol === "http:" && url.hostname.endsWith("syuzana.com") && c.env.ENVIRONMENT !== "development";
+  if (isWww || isHttp) {
+    url.hostname = "syuzana.com";
+    url.protocol = "https:";
+    return c.redirect(url.toString(), 301);
+  }
+  await next();
 });
 
 /* ---------- Language ---------- */
@@ -102,7 +120,13 @@ app.get("/:lang{(?:ru|en)}", async (c: AppContext) => {
   ]);
   const sentParam = c.req.query("sent");
   const sent = sentParam === "ok" || sentParam === "error" ? sentParam : undefined;
-  return page(c, <HomePage c={content} lang={lang} path={`/${lang}/`} hasPhoto={photo !== null} hasCv={cv !== null} sent={sent} />);
+  const formEnabled = Boolean(c.env.CONTACT_WEBHOOK_URL?.trim());
+  return page(c, <HomePage c={content} lang={lang} path={`/${lang}/`} hasPhoto={photo !== null} hasCv={cv !== null} formEnabled={formEnabled} sent={sent} />);
+});
+
+app.get("/:lang{(?:ru|en)}/privacy", async (c: AppContext) => {
+  const lang = c.get("lang");
+  return page(c, <PrivacyPage c={await loadContent(c.env.DB, lang)} lang={lang} path={c.req.path} />);
 });
 
 // The former sub-pages live on as anchors, so old links and the QR code keep working.

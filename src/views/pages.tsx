@@ -24,7 +24,7 @@ const ContactRow: FC<{ c: Content }> = ({ c }) => {
   const items: Array<[string, string, boolean]> = [
     [email ? `mailto:${email}` : "", email, false],
     [link(c, "contacts.linkedin"), c.get("footer.linkedin_label"), true],
-    [link(c, "contacts.booking_url"), c.get("footer.calendar_label"), true],
+    [link(c, "contacts.channel"), c.get("footer.telegram_label"), true],
     [link(c, "contacts.github"), c.get("footer.github_label"), true],
   ];
   const present = items.filter(([href, label]) => href && label);
@@ -42,7 +42,9 @@ const ContactRow: FC<{ c: Content }> = ({ c }) => {
   );
 };
 
-const FORMAT_IDS = ["audit", "demand", "mvp", "fractional"] as const;
+const PROJECT_FORMATS = ["evaluate", "audit"] as const;
+const TEAM_FORMATS = ["fractional"] as const;
+const FORMAT_IDS = [...PROJECT_FORMATS, ...TEAM_FORMATS] as const;
 type FormatId = (typeof FORMAT_IDS)[number];
 
 /** A format card states the result, the timeline and what the client contributes — never a price. */
@@ -129,19 +131,24 @@ const ContactForm: FC<{ c: Content; lang: Lang }> = ({ c, lang }) => (
   </form>
 );
 
-export type HomeProps = Props & { hasPhoto: boolean; hasCv: boolean; sent?: "ok" | "error" };
+export type HomeProps = Props & { hasPhoto: boolean; hasCv: boolean; formEnabled: boolean; sent?: "ok" | "error" };
 
 /** The whole site is one page: a business card first, then everything a visitor scrolls for. */
-export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, sent }) => {
+export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, formEnabled, sent }) => {
   const email = c.value("contacts.email");
   return (
     <Layout c={c} lang={lang} path={path} title={`${c.get("site.name")} — ${c.get("site.role")}`}>
       <section class="hero" id="top">
-        <div class="wrap hero-grid">
-          <div>
+        <div class={`wrap hero-grid${hasPhoto ? "" : " no-photo"}`}>
+          <div class="hero-id">
             <p class="kicker">{c.get("hero.role")}</p>
             <h1>{c.get("site.name")}</h1>
             <ContactRow c={c} />
+          </div>
+          {hasPhoto ? (
+            <img class="portrait hero-portrait" src="/assets/photo" alt={c.get("site.name")} width="720" height="960" fetchpriority="high" />
+          ) : null}
+          <div class="hero-body">
             <hr class="rule" />
             <p class="tagline">
               <Inline c={c} k="hero.title" />
@@ -154,16 +161,15 @@ export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, sent }
               <span class="note">{c.get("hero.note")}</span>
             </div>
           </div>
-          {hasPhoto ? (
-            <img class="portrait hero-portrait" src="/assets/photo" alt={c.get("site.name")} width="320" height="320" fetchpriority="high" />
-          ) : null}
         </div>
       </section>
 
       <section class="section" id="situations">
         <div class="wrap">
           <SectionHead c={c} titleKey="problems.title" />
-          <Text c={c} k="problems.items" />
+          <div class="problems">
+            <Text c={c} k="problems.items" />
+          </div>
         </div>
       </section>
 
@@ -173,21 +179,27 @@ export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, sent }
           <p class="lead">
             <Inline c={c} k="formats.intro" />
           </p>
+          <h3 class="group-title">{c.get("formats.group_project")}</h3>
           <div class="cards">
-            {FORMAT_IDS.map((id) => (
+            {PROJECT_FORMATS.map((id) => (
               <FormatCard c={c} id={id} />
             ))}
           </div>
+          <h3 class="group-title">{c.get("formats.group_team")}</h3>
+          <div class="cards cards-one">
+            {TEAM_FORMATS.map((id) => (
+              <FormatCard c={c} id={id} />
+            ))}
+          </div>
+
         </div>
       </section>
 
-      <section class="section band" id="process">
-        <div class="wrap cols">
-          <div>
-            <SectionHead c={c} titleKey="process.title" />
+      <section class="section" id="process">
+        <div class="wrap">
+          <SectionHead c={c} titleKey="process.title" />
+          <div class="one-list">
             <Text c={c} k="process.steps" />
-          </div>
-          <div class="band-aside">
             <Text c={c} k="process.principles" />
           </div>
         </div>
@@ -238,17 +250,32 @@ export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, sent }
               </p>
             ) : null}
           </div>
-          <div>
-            <h3>{c.get("contact.form_title")}</h3>
-            {sent === "ok" ? <p class="flash ok">{c.get("contact.form_ok")}</p> : null}
-            {sent === "error" ? <p class="flash error">{c.get("contact.form_error")}</p> : null}
-            <ContactForm c={c} lang={lang} />
-          </div>
+          {/* The form only appears once a delivery webhook is configured: a form that goes nowhere is worse than none. */}
+          {formEnabled ? (
+            <div>
+              <h3>{c.get("contact.form_title")}</h3>
+              {sent === "ok" ? <p class="flash ok">{c.get("contact.form_ok")}</p> : null}
+              {sent === "error" ? <p class="flash error">{c.get("contact.form_error")}</p> : null}
+              <ContactForm c={c} lang={lang} />
+            </div>
+          ) : null}
         </div>
       </section>
     </Layout>
   );
 };
+
+export const PrivacyPage: FC<Props> = ({ c, lang, path }) => (
+  <Layout c={c} lang={lang} path={path} title={`${c.get("privacy.title")} — ${c.get("site.name")}`}>
+    <section class="section">
+      <div class="wrap">
+        <h1>{c.get("privacy.title")}</h1>
+        <hr class="rule" />
+        <Text c={c} k="privacy.body" />
+      </div>
+    </section>
+  </Layout>
+);
 
 export const NotFoundPage: FC<Props> = ({ c, lang, path }) => (
   <Layout c={c} lang={lang} path={path} title={`404 — ${c.get("site.name")}`}>

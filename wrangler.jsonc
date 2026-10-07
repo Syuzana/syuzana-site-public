@@ -32,5 +32,8 @@
   // CV PDF and photo. Run `wrangler r2 bucket create syuzana-site-assets` once.
   "r2_buckets": [{ "binding": "ASSETS_BUCKET", "bucket_name": "syuzana-site-assets" }],
 
-  "routes": [{ "pattern": "syuzana.com", "custom_domain": true }]
+  "routes": [
+    { "pattern": "syuzana.com", "custom_domain": true },
+    { "pattern": "www.syuzana.com", "custom_domain": true }
+  ]
 }
