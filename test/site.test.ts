@@ -107,12 +107,24 @@ describe("public pages render from D1", () => {
     expect(html).not.toContain("SET_IN_ADMIN");
     expect(html).not.toContain('class="channels"');
   });
-  it("shows the contact form only when a delivery webhook is configured", async () => {
-    expect(await (await request("/en/")).text()).not.toContain('action="/api/contact"');
+  it("shows the form layout but enables sending only with delivery configured", async () => {
+    for (const lang of ["en", "ru"]) {
+      const html = await (await request(`/${lang}/?sent=ok`)).text();
+      expect(html).toContain('action="/api/contact"');
+      expect(html).toContain('name="name" required');
+      expect(html).toContain('name="email" type="email" required');
+      expect(html).toContain('textarea id="f-msg" name="message" required');
+      expect(html).toContain('type="submit" disabled');
+      expect(html).toContain('id="enquiry-unavailable"');
+      expect(html).not.toContain('class="flash ok"');
+    }
     const withHook = { ...prodEnv, CONTACT_WEBHOOK_URL: "https://script.google.com/macros/s/x/exec", CONTACT_WEBHOOK_SECRET: "test-webhook-secret" } as Env;
-    expect(await (await request("/en/", {}, withHook)).text()).toContain('action="/api/contact"');
+    const ready = await (await request("/en/", {}, withHook)).text();
+    expect(ready).toContain('action="/api/contact"');
+    expect(ready).not.toContain('type="submit" disabled');
+    expect(ready).not.toContain('id="enquiry-unavailable"');
   });
-  it("renders personal Telegram in contacts and footer, and the channel handle", async () => {
+  it("renders personal Telegram in contacts, footer and form fallback, and the channel handle", async () => {
     const telegram = new URL("/demo_person", "https://t.me").href;
     const channel = new URL("/demo_channel", "https://t.me").href;
     await env.DB.batch([
@@ -122,7 +134,7 @@ describe("public pages render from D1", () => {
     try {
       for (const lang of ["en", "ru"]) {
         const html = await (await request(`/${lang}/`)).text();
-        expect(html.match(new RegExp(`href="${telegram}"`, "g"))).toHaveLength(2);
+        expect(html.match(new RegExp(`href="${telegram}"`, "g"))).toHaveLength(3);
         expect(html).toContain('<span class="channel-value">@demo_person</span>');
         expect(html).toContain('<span class="channel-value">@demo_channel</span>');
       }

@@ -12,8 +12,8 @@ This HTML file is part of the requirements for release 2.0.0.
 For visual geometry, the HTML reference takes precedence over conflicting prose: its
 38rem sheet includes the side inset, and its content exceeds one viewport at 375px.
 Production fonts are self-hosted; the QR is generated server-side.
-Form delivery is the next release, 2.1.0; the form stays hidden until its backend is
-configured.
+Form delivery is the next release, 2.1.0. The form is visible; Send stays disabled until
+its backend is configured, with email and Telegram offered as contact alternatives.
 
 ## The job of the page
 
@@ -101,7 +101,8 @@ They label the block; they never compete with the name.
 - The email row has a copy button.
   Call `navigator.clipboard.writeText` inside the click handler, catch the rejection,
   and fall back to selecting the text.
-- The enquiry form validates and submits in the page; it never posts to a third party.
+- Once delivery is configured, the enquiry form validates and submits in the page; it
+  never posts to a third party.
 - Respect `prefers-reduced-motion`.
 
 ## Constraints

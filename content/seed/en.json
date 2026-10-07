@@ -60,6 +60,7 @@
   "contact.form_send": "Send",
   "contact.form_ok": "Thank you. I'll reply within two working days.",
   "contact.form_error": "Couldn't send. Please email me instead.",
+  "contact.form_unavailable": "Form sending is not available yet. Contact me via:",
   "footer.channel_line": "A channel on data ethics and product analysis.",
   "footer.linkedin_label": "LinkedIn",
   "footer.github_label": "GitHub",

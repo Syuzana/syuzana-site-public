@@ -60,6 +60,7 @@
   "contact.form_send": "Отправить",
   "contact.form_ok": "Спасибо. Отвечу в течение двух рабочих дней.",
   "contact.form_error": "Не получилось отправить. Напишите, пожалуйста, на почту.",
+  "contact.form_unavailable": "Отправка через форму пока недоступна. Напишите мне:",
   "footer.channel_line": "Канал про этику данных и продуктовый анализ.",
   "footer.linkedin_label": "LinkedIn",
   "footer.github_label": "GitHub",

@@ -176,25 +176,32 @@ const PricingTable: FC<{ c: Content }> = ({ c }) => {
   );
 };
 
-const ContactForm: FC<{ c: Content; lang: Lang }> = ({ c, lang }) => (
-  <form class="stack enquiry" method="post" action="/api/contact" data-success={c.get("contact.form_ok")} data-error={c.get("contact.form_error")} data-sending={c.get("contact.form_sending")}>
+const ContactForm: FC<{ c: Content; lang: Lang; enabled: boolean }> = ({ c, lang, enabled }) => (
+  <form class="stack enquiry" method="post" action="/api/contact" aria-describedby={enabled ? undefined : "enquiry-unavailable"} data-success={c.get("contact.form_ok")} data-error={c.get("contact.form_error")} data-sending={c.get("contact.form_sending")}>
     <input type="hidden" name="lang" value={lang} />
     <input type="hidden" name="id" value={crypto.randomUUID()} />
-    <label>
-      {c.get("contact.form_name")}
-      <input name="name" required maxlength={120} autocomplete="name" />
-    </label>
-    <label>
-      {c.get("contact.form_email")}
-      <input name="email" type="email" required maxlength={254} autocomplete="email" />
-    </label>
-    <label>
-      {c.get("contact.form_message")}
-      <textarea name="message" required maxlength={4000}></textarea>
-    </label>
-    <button class="btn" type="submit">
+    <div>
+      <label for="f-name">{c.get("contact.form_name")}</label>
+      <input id="f-name" name="name" required maxlength={120} autocomplete="name" />
+    </div>
+    <div>
+      <label for="f-email">{c.get("contact.form_email")}</label>
+      <input id="f-email" name="email" type="email" required maxlength={254} autocomplete="email" />
+    </div>
+    <div>
+      <label for="f-msg">{c.get("contact.form_message")}</label>
+      <textarea id="f-msg" name="message" required maxlength={4000}></textarea>
+    </div>
+    <button class="btn" type="submit" disabled={!enabled}>
       {c.get("contact.form_send")}
     </button>
+    {!enabled ? (
+      <p class="form-note" id="enquiry-unavailable">
+        {c.get("contact.form_unavailable")}
+        {c.value("contacts.email") ? <> <a href={`mailto:${c.value("contacts.email")}`}>{c.get("contact.email_label")}</a></> : null}
+        {link(c, "contacts.telegram") ? <> · <a href={link(c, "contacts.telegram")} rel="noopener">{c.get("footer.telegram_label")}</a></> : null}
+      </p>
+    ) : null}
     <p class="form-status" role="status" aria-live="polite" hidden></p>
   </form>
 );
@@ -263,13 +270,9 @@ export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, photoUrl = "/
       <div class="wrap">
         <SectionHead c={c} titleKey="contact.title" />
         <Text c={c} k="contact.body" />
-        {formEnabled ? (
-          <>
-            {sent === "ok" ? <p class="flash ok">{c.get("contact.form_ok")}</p> : null}
-            {sent === "error" ? <p class="flash error">{c.get("contact.form_error")}</p> : null}
-            <ContactForm c={c} lang={lang} />
-          </>
-        ) : null}
+        {formEnabled && sent === "ok" ? <p class="flash ok">{c.get("contact.form_ok")}</p> : null}
+        {formEnabled && sent === "error" ? <p class="flash error">{c.get("contact.form_error")}</p> : null}
+        <ContactForm c={c} lang={lang} enabled={formEnabled} />
         <div class="closing">
           <BookButton c={c} lang={lang} labelKey="hero.cta" />
           <p class="hero-note">{c.get("hero.note")}</p>

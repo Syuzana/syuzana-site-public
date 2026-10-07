@@ -127,7 +127,9 @@ label { font-size:.625rem; font-weight:700; letter-spacing:.14em; text-transform
 input, textarea, select { font:inherit; font-size:.9375rem; color:var(--fg); background:var(--bg); border:1px solid var(--rule-firm); padding:.55rem .7rem; width:100%; }
 textarea { resize:vertical; min-height:4.5rem; }
 .enquiry button[type="submit"] { background:var(--fg); color:var(--bg); border:1px solid var(--fg); justify-self:start; width:calc(50% - .375rem); }
-.enquiry button[type="submit"]:hover { background:var(--accent-deep); border-color:var(--accent-deep); color:var(--on-accent); }
+.enquiry button[type="submit"]:not(:disabled):hover { background:var(--accent-deep); border-color:var(--accent-deep); color:var(--on-accent); }
+.enquiry button[type="submit"]:disabled { cursor:not-allowed; }
+.form-note { font-size:.8125rem; color:var(--fg-soft); margin:0; text-align:left; }
 @media (max-width:480px) {
   .actions { grid-template-columns:1fr; }
   .enquiry button[type="submit"], .closing .btn, .actions .btn, .actions .btn.secondary {
@@ -166,6 +168,7 @@ h3 { font-family:var(--serif); }
 .table-wrap { max-width:100%; }
 td { text-align:left; hyphens:manual; }
 form.stack label { display:grid; gap:0; }
+form.stack.enquiry label { display:inline; }
 form.stack { margin-bottom:0; }
 input, textarea, select { border-radius:0; }
 [hidden] { display:none!important; }

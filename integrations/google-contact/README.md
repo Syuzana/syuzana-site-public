@@ -28,7 +28,8 @@ notification on retry.
 6. Set Worker secrets `CONTACT_WEBHOOK_URL` (the deployed `/exec` URL) and
    `CONTACT_WEBHOOK_SECRET` (the same token), then deploy the Worker.
 
-The form stays hidden until both Worker secrets are present.
+The form is visible with its Send button disabled until both Worker secrets are present.
+While sending is unavailable, it offers the owner’s configured email and Telegram links.
 Test a submission through the site, then verify its single row, its `Email sent at`
 value, and the notification in the owner’s mailbox.
 Retry the same ID to verify deduplication.
@@ -45,7 +46,7 @@ without requiring the visitor to return.
 Check `Last error`, Apps Script Executions and mail quota.
 Do not delete pending rows before resolving delivery.
 Rotate the shared token in both Script Properties and Worker secrets if exposed.
-Disabling the webhook or token hides the form; a previous Worker version can be restored
+Disabling the webhook or token disables Send; a previous Worker version can be restored
 through Cloudflare deployment history.
 
 See [Google’s web app guide](https://developers.google.com/apps-script/guides/web) and

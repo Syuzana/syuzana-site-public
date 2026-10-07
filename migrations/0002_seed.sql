@@ -85,6 +85,7 @@ INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.fo
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_send', 'ru', 'Отправить', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_ok', 'ru', 'Спасибо. Отвечу в течение двух рабочих дней.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_error', 'ru', 'Не получилось отправить. Напишите, пожалуйста, на почту.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_unavailable', 'ru', 'Отправка через форму пока недоступна. Напишите мне:', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.channel_line', 'ru', 'Канал про этику данных и продуктовый анализ.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.linkedin_label', 'ru', 'LinkedIn', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.github_label', 'ru', 'GitHub', '1970-01-01T00:00:00Z');
@@ -208,6 +209,7 @@ INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.fo
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_send', 'en', 'Send', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_ok', 'en', 'Thank you. I''ll reply within two working days.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_error', 'en', 'Couldn''t send. Please email me instead.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_unavailable', 'en', 'Form sending is not available yet. Contact me via:', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.channel_line', 'en', 'A channel on data ethics and product analysis.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.linkedin_label', 'en', 'LinkedIn', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.github_label', 'en', 'GitHub', '1970-01-01T00:00:00Z');

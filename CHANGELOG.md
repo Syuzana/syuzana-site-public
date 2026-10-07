@@ -11,9 +11,12 @@
   the contact list and footer.
 - Use the supplied original portrait and refresh hero and social-preview image URLs
   automatically when the photo is replaced in R2.
+- Show the v14 contact form layout before delivery is configured, with Send disabled and
+  email and Telegram links offered as alternatives.
 
 Personal Telegram is configured in the contact list and footer.
-Production delivery awaits Apps Script setup and authorization.
+The form layout is available; production delivery awaits Apps Script setup and
+authorization.
 
 ## 2.0.0
 
