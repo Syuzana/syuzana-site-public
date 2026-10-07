@@ -35,11 +35,21 @@ const ContactList: FC<{ c: Content }> = ({ c }) => {
     <ul class="channels" aria-label={c.get("hero.contacts_label")}>
       {present.map(([key, href, label, external]) => (
         <li>
-          <a href={href} rel={external ? "noopener" : undefined}>
-            <span class="channel-label">{label}</span>
-            <span class="channel-value">{key === "contacts.email" ? email : hostPath(href)}</span>
-            <span class="channel-go" aria-hidden="true">&#8594;</span>
-          </a>
+          {key === "contacts.email" ? (
+            <div class="channel-row">
+              <span class="channel-label">{label}</span>
+              <a class="channel-value email-value" id="contact-email" href={href}>{email}</a>
+              <button class="copy" type="button" data-copy-email data-copied={c.get("contact.copy_ok")} data-selected={c.get("contact.copy_selected")} aria-live="polite">
+                {c.get("contact.copy_label")}
+              </button>
+            </div>
+          ) : (
+            <a href={href} rel={external ? "noopener" : undefined}>
+              <span class="channel-label">{label}</span>
+              <span class="channel-value">{key === "contacts.channel" ? c.get("footer.channel_title") : hostPath(href)}</span>
+              <span class="channel-go" aria-hidden="true">&#8594;</span>
+            </a>
+          )}
         </li>
       ))}
     </ul>
@@ -167,7 +177,7 @@ const PricingTable: FC<{ c: Content }> = ({ c }) => {
 };
 
 const ContactForm: FC<{ c: Content; lang: Lang }> = ({ c, lang }) => (
-  <form class="stack" method="post" action="/api/contact">
+  <form class="stack enquiry" method="post" action="/api/contact" data-success={c.get("contact.form_ok")} data-error={c.get("contact.form_error")} data-sending={c.get("contact.form_sending")}>
     <input type="hidden" name="lang" value={lang} />
     <label>
       {c.get("contact.form_name")}
@@ -181,9 +191,10 @@ const ContactForm: FC<{ c: Content; lang: Lang }> = ({ c, lang }) => (
       {c.get("contact.form_message")}
       <textarea name="message" required maxlength={4000}></textarea>
     </label>
-    <button class="btn secondary" type="submit">
+    <button class="btn" type="submit">
       {c.get("contact.form_send")}
     </button>
+    <p class="form-status" role="status" aria-live="polite" hidden></p>
   </form>
 );
 
@@ -198,9 +209,9 @@ export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, formEn
           <img class="portrait card-portrait" src="/assets/photo" alt={c.get("site.name")} width="720" height="960" fetchpriority="high" />
         ) : null}
         <div class="card-id">
-          <p class="kicker">{c.get("hero.role")}</p>
+          <p class="kicker">{c.get("site.role").split("·")[0]?.trim()}</p>
           <h1>{c.get("site.name")}</h1>
-          <p class="role">{c.get("hero.title")}</p>
+          <p class="role">{c.get("site.role").split("·").slice(1).join("·").trim()}</p>
         </div>
       </div>
       <div class="wrap">
@@ -215,7 +226,7 @@ export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, formEn
             </a>
           ) : null}
         </div>
-        <p class="note">{c.get("hero.note")}</p>
+        <p class="hero-note">{c.get("hero.action_note")}</p>
         <ContactList c={c} />
         <VCard c={c} origin={origin} />
       </div>
@@ -224,11 +235,11 @@ export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, formEn
     <section class="section" id="experience">
       <div class="wrap">
         <SectionHead c={c} titleKey="experience.title" />
-        <p class="note">
+        <p class="aside">
           <Inline c={c} k="experience.types" />
         </p>
         <Results c={c} />
-        <p class="note mt">
+        <p class="aside">
           <Inline c={c} k="experience.intro" />
         </p>
       </div>
@@ -241,7 +252,7 @@ export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, formEn
         <div class="table-wrap">
           <PricingTable c={c} />
         </div>
-        <p class="note mt">
+        <p class="aside">
           <Inline c={c} k="pricing.note" />
         </p>
       </div>
@@ -260,7 +271,7 @@ export const HomePage: FC<HomeProps> = ({ c, lang, path, hasPhoto, hasCv, formEn
         ) : null}
         <div class="closing">
           <BookButton c={c} lang={lang} labelKey="hero.cta" />
-          <p class="note">{c.get("hero.note")}</p>
+          <p class="hero-note">{c.get("hero.note")}</p>
         </div>
       </div>
     </section>

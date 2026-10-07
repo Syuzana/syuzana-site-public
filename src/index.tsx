@@ -50,7 +50,7 @@ app.use(
       fontSrc: ["'self'"],
       imgSrc: ["'self'", "data:"],
       // Cloudflare Web Analytics is injected by the platform (cookieless); allow only that origin.
-      scriptSrc: ["https://static.cloudflareinsights.com"],
+      scriptSrc: ["'self'", "https://static.cloudflareinsights.com"],
       connectSrc: ["'self'", "https://cloudflareinsights.com"],
       objectSrc: ["'none'"],
       frameAncestors: ["'none'"],
@@ -163,17 +163,19 @@ app.post("/api/contact", bodyLimit({ maxSize: 16 * 1024 }), async (c) => {
   const langRaw = form["lang"];
   const lang: Lang = typeof langRaw === "string" && isLang(langRaw) ? langRaw : DEFAULT_LANG;
   const back = (state: "ok" | "error") => c.redirect(`/${lang}/?sent=${state}#contact`, 303);
+  const wantsJson = c.req.header("Accept")?.includes("application/json");
+  const result = (ok: boolean, status: 200 | 400 | 502 | 503) => wantsJson ? c.json({ ok }, status) : back(ok ? "ok" : "error");
 
   const validation = validateContact({ name: form["name"], email: form["email"], message: form["message"] }, lang, new Date());
   if (!validation.ok) {
     console.log(JSON.stringify({ event: "contact", outcome: "invalid", reason: validation.reason }));
-    return back("error");
+    return result(false, 400);
   }
 
   const delivery = await deliverToSheet(c.env, validation.value);
   console.log(JSON.stringify({ event: "contact", outcome: delivery.delivered ? "delivered" : "failed", status: delivery.status }));
   if (delivery.delivered) c.executionCtx.waitUntil(notifyTelegram(c.env, validation.value));
-  return back(delivery.delivered ? "ok" : "error");
+  return result(delivery.delivered, delivery.delivered ? 200 : delivery.status === 503 ? 503 : 502);
 });
 
 /* ---------- Admin (Cloudflare Access + JWT re-check) ---------- */

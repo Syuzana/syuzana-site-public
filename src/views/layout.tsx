@@ -11,15 +11,6 @@ export type PageProps = PropsWithChildren<{
   description?: string;
 }>;
 
-/** One-page site: the nav is a row of anchors into the home page. */
-const NAV: ReadonlyArray<[string, string]> = [
-  ["situations", "nav.situations"],
-  ["formats", "nav.formats"],
-  ["experience", "nav.experience"],
-  ["pricing", "nav.pricing"],
-  ["contact", "nav.contact"],
-];
-
 /** An admin-entered link, or "" when unset or not http(s)/mailto/relative. */
 export function link(c: Content, key: string): string {
   return safeUrl(c.value(key)) ?? "";
@@ -102,45 +93,50 @@ export const Layout: FC<PageProps> = ({ c, lang, path, title, description, child
         <link rel="stylesheet" href="/styles.css" />
       </head>
       <body>
-        <header class="site-header">
-          <div class="wrap">
-            <div class="lang-pair" role="group" aria-label="Language">
-              <span class="lang-current" aria-current="true" lang={lang}>
-                {lang.toUpperCase()}
-              </span>
-              <a class="lang-toggle" href={switchLangPath(path, other)} hreflang={other} lang={other}>
-                {other.toUpperCase()}
-              </a>
+        <div class="sheet">
+          <header class="site-header">
+            <div class="wrap">
+              <div class="lang-pair" role="group" aria-label="Language">
+                {(["en", "ru"] as const).map((language) => language === lang ? (
+                  <span class="lang-current" aria-current="true" lang={language}>{language.toUpperCase()}</span>
+                ) : (
+                  <a class="lang-toggle" href={switchLangPath(path, language)} hreflang={language} lang={language}>{language.toUpperCase()}</a>
+                ))}
+              </div>
             </div>
-          </div>
-        </header>
-        <main>{children}</main>
-        <footer class="site-footer">
-          <div class="wrap">
-            <div class="links">
-              {link(c, "contacts.linkedin") ? (
-                <a href={link(c, "contacts.linkedin")} rel="noopener">
-                  {c.get("footer.linkedin_label")}
-                </a>
-              ) : null}
-              {link(c, "contacts.github") ? (
-                <a href={link(c, "contacts.github")} rel="noopener">
-                  {c.get("footer.github_label")}
-                </a>
-              ) : null}
-              {link(c, "contacts.channel") ? (
-                <a href={link(c, "contacts.channel")} rel="noopener">
-                  {c.get("footer.channel_label")}
-                </a>
-              ) : null}
-              {c.value("contacts.email") ? <a href={`mailto:${c.value("contacts.email")}`}>{c.value("contacts.email")}</a> : null}
+          </header>
+          <main>{children}</main>
+          <footer class="site-footer">
+            <div class="wrap">
+              <div class="links">
+                {c.value("contacts.email") ? <a href={`mailto:${c.value("contacts.email")}`}>{c.get("contact.email_label")}</a> : null}
+                {link(c, "contacts.linkedin") ? (
+                  <a href={link(c, "contacts.linkedin")} rel="noopener">
+                    {c.get("footer.linkedin_label")}
+                  </a>
+                ) : null}
+                {link(c, "contacts.telegram") ? (
+                  <a href={link(c, "contacts.telegram")} rel="noopener">{c.get("footer.telegram_label")}</a>
+                ) : null}
+                {link(c, "contacts.github") ? (
+                  <a href={link(c, "contacts.github")} rel="noopener">
+                    {c.get("footer.github_label")}
+                  </a>
+                ) : null}
+                {link(c, "contacts.channel") ? (
+                  <a href={link(c, "contacts.channel")} rel="noopener">
+                    {c.get("footer.channel_label")}
+                  </a>
+                ) : null}
+              </div>
+              <p class="note">
+                © {new Date().getUTCFullYear()} {c.get("site.name")} · <a href={`/${lang}/privacy`}>{c.get("footer.privacy_label")}</a> ·{" "}
+                <a href="#top" class="to-top" aria-label="Top">↑</a>
+              </p>
             </div>
-            <p class="note">
-              © {new Date().getUTCFullYear()} {c.get("site.name")} · <a href={`/${lang}/privacy`}>{c.get("footer.privacy_label")}</a> ·{" "}
-              <a href="#top" class="to-top" aria-label="Top">↑</a>
-            </p>
-          </div>
-        </footer>
+          </footer>
+        </div>
+        <script src="/site.js" defer></script>
       </body>
     </html>
   );

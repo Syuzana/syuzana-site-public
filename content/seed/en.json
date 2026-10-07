@@ -81,5 +81,10 @@
   "footer.privacy_label": "Privacy",
   "privacy.title": "Privacy",
   "privacy.body": "**Who processes the data.** Syuzana Tevdoradze, {email}.\n\n**What is collected and why.** The form on this site sends me your name, email address and message — only so I can reply. Booking a consultation goes through Google Calendar under its terms. Visit statistics come from Cloudflare Web Analytics: no cookies, no visitor identification, aggregate figures only.\n\n**How long it is kept.** Messages — for the duration of our correspondence and no longer than 12 months after it ends; then they are deleted.\n\n**Your rights.** You can request a copy of your data, a correction or deletion — write to {email}.\n\n**Cookies.** The site sets one technical cookie with your chosen language. There are no tracking cookies.",
-  "footer.telegram_label": "Telegram"
+  "footer.telegram_label": "Telegram",
+  "hero.action_note": "20–40 minutes online, no charge.",
+  "contact.copy_label": "Copy",
+  "contact.copy_ok": "Copied",
+  "contact.copy_selected": "Selected",
+  "contact.form_sending": "Sending…"
 }

@@ -118,6 +118,11 @@ INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('privacy.bo
 
 **Cookies.** Сайт ставит одну техническую cookie с выбранным языком. Трекинговых cookies нет.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.telegram_label', 'ru', 'Telegram', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.action_note', 'ru', '20–40 минут онлайн, бесплатно.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.copy_label', 'ru', 'Копировать', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.copy_ok', 'ru', 'Скопировано', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.copy_selected', 'ru', 'Выделено', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_sending', 'ru', 'Отправляю…', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('site.name', 'en', 'Syuzana Tevdoradze', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('site.role', 'en', 'Technical Product Owner · AI and data products', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('site.description', 'en', 'Technical product lead for AI and data products: what to build, how to get it to production, and at what economics.', '1970-01-01T00:00:00Z');
@@ -236,6 +241,11 @@ INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('privacy.bo
 
 **Cookies.** The site sets one technical cookie with your chosen language. There are no tracking cookies.', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('footer.telegram_label', 'en', 'Telegram', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('hero.action_note', 'en', '20–40 minutes online, no charge.', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.copy_label', 'en', 'Copy', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.copy_ok', 'en', 'Copied', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.copy_selected', 'en', 'Selected', '1970-01-01T00:00:00Z');
+INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contact.form_sending', 'en', 'Sending…', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contacts.email', '*', '{{SET_IN_ADMIN}}', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contacts.linkedin', '*', '{{SET_IN_ADMIN}}', '1970-01-01T00:00:00Z');
 INSERT OR IGNORE INTO content (key, lang, value, updated_at) VALUES ('contacts.github', '*', '{{SET_IN_ADMIN}}', '1970-01-01T00:00:00Z');

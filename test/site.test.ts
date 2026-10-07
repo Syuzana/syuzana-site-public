@@ -1,6 +1,6 @@
 import { createExecutionContext, env, waitOnExecutionContext } from "cloudflare:test";
 import { SignJWT, createLocalJWKSet, exportJWK, generateKeyPair } from "jose";
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import { verifyAccess } from "../src/access";
 import { MAX_ATTEMPTS, SESSION_COOKIE, createSession, hashPassword, verifyPassword, verifySession } from "../src/auth";
 import { looksLikeFormula, neutralizeFormula, validateContact } from "../src/contact";
@@ -58,7 +58,7 @@ describe("public pages render from D1", () => {
     expect(html.startsWith("<!doctype html>")).toBe(true);
     expect(html).toContain("Я руководитель продукта с техническим опытом");
     expect(html).toContain('lang="ru"');
-    expect(res.headers.get("Content-Security-Policy")).toContain("script-src https://static.cloudflareinsights.com");
+    expect(res.headers.get("Content-Security-Policy")).toContain("script-src 'self' https://static.cloudflareinsights.com");
     expect(res.headers.get("Content-Security-Policy")).not.toContain("googleapis");
     expect(res.headers.get("Content-Security-Policy")).not.toContain("unsafe-inline");
     expect(res.headers.get("Strict-Transport-Security")).toContain("max-age=");
@@ -79,7 +79,8 @@ describe("public pages render from D1", () => {
     const html = await (await request("/ru/")).text();
     expect(html).toContain("<h1>Сюзана Тевдорадзе</h1>");
     expect(html).toContain("Technical Product Owner");
-    expect(html).toContain("Стратегия и развитие AI-продуктов");
+    expect(html).toContain('<p class="kicker">Technical Product Owner</p>');
+    expect(html).toContain('<p class="role">AI и дата-продукты</p>');
     // No package totals anywhere: the page prices by rate and hours.
     expect(html).not.toMatch(/€\s?\d\s?\d{3}/);
   });
@@ -190,6 +191,8 @@ describe("admin gate (fails closed)", () => {
     expect(html).toContain("mailto:me@example.com");
     // Each row is labelled, so the value is never the only thing read out.
     expect(html).toContain('class="channel-label"');
+    expect(html).toContain("data-copy-email");
+    expect(html).toContain('data-copied="Copied"');
   });
   it("ignores keys that do not exist", async () => {
     await adminPost("/admin/content", new URLSearchParams({ lang: "en", "v:evil.key": "x" }));
@@ -404,6 +407,38 @@ describe("uploads are validated by magic bytes", () => {
 });
 
 describe("contact form", () => {
+  it("returns a JSON validation error for an in-page submission", async () => {
+    const res = await request("/api/contact", {
+      method: "POST", headers: { Accept: "application/json" },
+      body: new URLSearchParams({ lang: "en", name: "A", email: "invalid", message: "hi" }),
+    });
+    expect(res.status).toBe(400);
+    expect(await res.json()).toEqual({ ok: false });
+    expect(res.headers.get("Location")).toBeNull();
+  });
+  it("does not acknowledge delivery when the webhook is unavailable", async () => {
+    const res = await request("/api/contact", {
+      method: "POST", headers: { Accept: "application/json" },
+      body: new URLSearchParams({ lang: "en", name: "A", email: "a@b.co", message: "hi" }),
+    });
+    expect(res.status).toBe(503);
+    expect(await res.json()).toEqual({ ok: false });
+  });
+  it("acknowledges an in-page submission only after webhook delivery", async () => {
+    const delivery = vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response("ok", { status: 200 }));
+    try {
+      const res = await request("/api/contact", {
+        method: "POST", headers: { Accept: "application/json" },
+        body: new URLSearchParams({ lang: "en", name: "A", email: "a@b.co", message: "hi" }),
+      }, { ...prodEnv, CONTACT_WEBHOOK_URL: "https://delivery.example.org/contact" });
+      expect(res.status).toBe(200);
+      expect(await res.json()).toEqual({ ok: true });
+      expect(delivery).toHaveBeenCalledTimes(1);
+      expect(delivery).toHaveBeenCalledWith("https://delivery.example.org/contact", expect.objectContaining({ method: "POST" }));
+    } finally {
+      delivery.mockRestore();
+    }
+  });
   const now = new Date("2026-10-07T00:00:00Z");
   it("neutralises spreadsheet formulas instead of losing the lead", () => {
     expect(looksLikeFormula("=HYPERLINK()")).toBe(true);

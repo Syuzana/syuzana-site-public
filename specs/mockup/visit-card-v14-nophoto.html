@@ -1,0 +1,381 @@
+<title>Syuzana Tevdoradze</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700&family=PT+Sans:ital,wght@0,400;0,700&display=swap">
+<style>
+/* Layout: the card owns the first screen — photo, name, one line, two actions, five
+   channels, vCard QR. Explanation starts below it. Tokens are the site's own. */
+:root {
+  --paper:#f3eee6; --ink:#1e1a19; --ink-soft:#4a4542;
+  --accent:#be1e2d; --accent-deep:#7e1620;
+  --bg:var(--paper); --surface:#e9e2d6; --fg:var(--ink); --fg-soft:var(--ink-soft);
+  --rule:rgba(30,26,25,.14); --rule-firm:rgba(30,26,25,.26);
+  --halftone:rgba(30,26,25,.24); --hover:rgba(30,26,25,.045);
+  --link:var(--accent); --link-hover:var(--accent-deep); --on-accent:#f3eee6;
+  --serif:"PT Serif",Georgia,"Times New Roman",serif;
+  --sans:"PT Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --measure:62ch; --btn-w:15rem; --section:clamp(3rem,7vw,4.5rem);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#1e1a19; --surface:#2a2524; --fg:#f3eee6; --fg-soft:#cfc6ba;
+    --accent:#e0565f; --accent-deep:#c9414b;
+    --rule:rgba(243,238,230,.16); --rule-firm:rgba(243,238,230,.3);
+    --halftone:rgba(243,238,230,.2); --hover:rgba(243,238,230,.06);
+    --link:#e0565f; --link-hover:#f2949b; --on-accent:#1e1a19;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#1e1a19; --surface:#2a2524; --fg:#f3eee6; --fg-soft:#cfc6ba;
+  --accent:#e0565f; --accent-deep:#c9414b;
+  --rule:rgba(243,238,230,.16); --rule-firm:rgba(243,238,230,.3);
+  --halftone:rgba(243,238,230,.2); --hover:rgba(243,238,230,.06);
+  --link:#e0565f; --link-hover:#f2949b; --on-accent:#1e1a19;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin:0; background:var(--bg); color:var(--fg); font-family:var(--sans);
+  font-size:1.0625rem; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+.sheet {
+  max-width:38rem; margin:0 auto;
+  padding-inline:clamp(16px,5vw,32px);
+  padding-block:clamp(1.25rem,4vw,2rem) clamp(3rem,8vw,5rem);
+}
+
+/* ---------- language switch ---------- */
+.lang { display:flex; justify-content:flex-end; gap:0; margin-bottom:1.5rem; }
+.lang button {
+  font:inherit; font-size:.6875rem; font-weight:700; letter-spacing:.14em;
+  text-transform:uppercase; cursor:pointer; background:none; color:var(--fg-soft);
+  border:1px solid var(--rule-firm); padding:.4rem .7rem; min-height:34px;
+}
+.lang button + button { border-left:0; }
+.lang button[aria-pressed="true"] { background:var(--fg); color:var(--bg); border-color:var(--fg); }
+.lang button:hover[aria-pressed="false"] { color:var(--fg); }
+
+.kicker { font-size:.6875rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--accent-deep); margin:0; }
+
+/* ---------- identity ---------- */
+.ident .kicker { line-height:1; padding-top:2px; }
+.ident { display:grid; grid-template-columns:9rem minmax(0,1fr); gap:clamp(1.1rem,4vw,1.75rem); align-items:start; }
+@media (max-width:540px) { .ident { grid-template-columns:7rem minmax(0,1fr); gap:1rem; } }
+.frame { aspect-ratio:4/5; width:100%; height:auto; max-width:100%; display:block; border:1px solid var(--rule); background:var(--surface); object-fit:cover; object-position:50% 20%; }
+.frame span { font-size:.5625rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--fg-soft); }
+h1 {
+  font-family:var(--serif); font-weight:700; font-size:clamp(1.9rem,7vw,3rem);
+  line-height:1.02; letter-spacing:-.015em; margin:.3rem 0 .35rem; text-wrap:balance;
+}
+.role { margin:0; color:var(--fg-soft); font-size:.9375rem; }
+.tagline { margin:.9rem 0 0; text-align:justify; hyphens:auto; font-family:var(--serif); font-size:1.0625rem; line-height:1.45; }
+
+/* ---------- actions ---------- */
+.actions { margin-top:1.5rem; display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+.cta, .cta2, button[type="submit"] {
+  display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box;
+  font-family:var(--sans); font-weight:700; font-size:1rem; letter-spacing:.02em;
+  min-height:52px; padding:.85rem 1.6rem;
+  text-decoration:none; text-align:center; cursor:pointer;
+}
+.cta { background:var(--accent-deep); color:var(--on-accent); border:1px solid var(--accent-deep); }
+.cta:hover { background:var(--accent); border-color:var(--accent); color:var(--on-accent); }
+.cta2 { background:none; color:var(--fg); border:1px solid var(--rule-firm); }
+.cta2:hover { border-color:var(--fg); color:var(--fg); background:var(--hover); }
+.ctanote { margin:.6rem 0 0; font-size:.875rem; color:var(--fg-soft); }
+
+/* ---------- channels ---------- */
+.channels { margin:1.75rem 0 0; padding:0; list-style:none; border-top:1px solid var(--rule-firm); }
+.channels li { border-bottom:1px solid var(--rule); }
+.channels a, .channels .row {
+  display:flex; align-items:baseline; gap:.75rem 1rem; flex-wrap:wrap;
+  min-height:52px; padding:.7rem .5rem .7rem 0; text-decoration:none; color:inherit;
+}
+.channels a:hover { background:var(--hover); }
+.channels .label { flex:0 0 5.5rem; font-size:.625rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--fg-soft); }
+.channels .value { font-family:var(--serif); font-size:1.125rem; min-width:0; overflow-wrap:anywhere; flex:1; }
+.channels a:hover .value { color:var(--link-hover); }
+.channels .go { font-size:.875rem; color:var(--fg-soft); }
+.copy {
+  font:inherit; font-size:.625rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  cursor:pointer; background:none; color:var(--fg-soft); border:1px solid var(--rule-firm);
+  padding:.25rem .55rem; min-height:32px;
+}
+.copy:hover { color:var(--fg); border-color:var(--fg-soft); }
+
+/* ---------- vCard QR ---------- */
+.vcard { display:flex; align-items:center; gap:1rem; flex-wrap:wrap; margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid var(--rule); }
+/* light tile in both themes — inverted codes fail on many scanners */
+.qr { width:108px; height:108px; flex:0 0 auto; background:#f3eee6; border:1px solid var(--rule-firm); padding:7px; display:grid; place-items:center; }
+.qr img, .qr canvas { display:block; width:100%!important; height:100%!important; }
+.qr .pending { font-size:.5625rem; letter-spacing:.14em; text-transform:uppercase; color:#4a4542; text-align:center; }
+.vcard p { margin:0; font-size:.875rem; color:var(--fg-soft); max-width:28ch; }
+.vcard b { color:var(--fg); display:block; font-size:.9375rem; }
+
+/* ---------- below ---------- */
+section { margin-top:var(--section); }
+h2 { font-size:.6875rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--fg-soft); margin:0 0 1.1rem; padding-bottom:.5rem; border-bottom:1px solid var(--rule); }
+p { max-width:none; text-align:justify; hyphens:auto; }
+.aside { margin:1rem 0 0; font-size:.9375rem; color:var(--fg-soft); }
+.results { list-style:none; margin:1.2rem 0 0; padding:0; display:grid; gap:1.4rem; }
+.results li { min-width:0; }
+.results .what { display:block; font-size:.6875rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-deep); margin-bottom:.2rem; }
+.results p { margin:0; font-size:.9375rem; }
+.principles { margin:0; padding:0; list-style:none; display:grid; gap:.7rem; }
+.principles li { font-family:var(--serif); font-style:italic; font-size:1.0625rem; padding-left:1rem; border-left:2px solid var(--accent-deep); }
+.tablewrap { overflow-x:auto; }
+table { border-collapse:collapse; width:100%; min-width:30rem; font-size:.9375rem; }
+th { text-align:left; font-size:.625rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--fg-soft); border-bottom:1px solid var(--rule-firm); padding:0 1rem .5rem 0; }
+td { border-bottom:1px solid var(--rule); padding:.6rem 1rem .6rem 0; vertical-align:baseline; font-variant-numeric:tabular-nums; }
+td:first-child { font-weight:700; }
+td:last-child, th:last-child { padding-right:0; color:var(--fg-soft); }
+tbody tr:first-child td { color:var(--accent-deep); }
+form { display:grid; gap:.7rem; max-width:none; margin-top:1.2rem; }
+label { font-size:.625rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--fg-soft); }
+input, textarea { font:inherit; font-size:.9375rem; color:var(--fg); background:var(--bg); border:1px solid var(--rule-firm); padding:.55rem .7rem; width:100%; }
+textarea { resize:vertical; min-height:4.5rem; }
+button[type="submit"] { background:var(--fg); color:var(--bg); border:1px solid var(--fg); justify-self:start; width:calc(50% - .375rem); }
+button[type="submit"]:hover { background:var(--accent-deep); border-color:var(--accent-deep); color:var(--on-accent); }
+@media (max-width:480px) {
+  .actions { grid-template-columns:1fr; }
+  button[type="submit"], .closing-cta, .actions .cta, .actions .cta2 {
+    width:100%; min-width:0; justify-self:stretch; display:block;
+  }
+}
+.sent { font-size:.875rem; color:var(--accent-deep); font-weight:700; margin:0; }
+.closing { margin-top:1.75rem; padding-top:1.5rem; border-top:1px solid var(--rule-firm); }
+footer { margin-top:var(--section); padding-top:1rem; border-top:1px solid var(--rule); font-size:.8125rem; color:var(--fg-soft); }
+.fcontacts { list-style:none; display:flex; flex-wrap:wrap; gap:.4rem 1.25rem; margin:0 0 .9rem; padding:0; }
+.fcontacts a { font-weight:700; font-size:.6875rem; letter-spacing:.14em; text-transform:uppercase; text-decoration:none; }
+.copyright { font-variant-numeric:tabular-nums; }
+footer p { margin:0 0 .4rem; }
+a { color:var(--link); text-decoration-thickness:1px; text-underline-offset:2px; }
+a:hover { color:var(--link-hover); }
+:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+@media (prefers-reduced-motion: reduce) { * { transition:none!important; animation:none!important; } }
+</style>
+
+<div class="sheet">
+
+  <div class="lang">
+    <button type="button" id="lang-en" aria-pressed="true">EN</button>
+    <button type="button" id="lang-ru" aria-pressed="false">RU</button>
+  </div>
+
+  <header>
+    <div class="ident">
+      <img class="frame" id="portrait" width="420" height="560" alt="Syuzana Tevdoradze" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MjAgNTYwIj48cmVjdCB3aWR0aD0iNDIwIiBoZWlnaHQ9IjU2MCIgZmlsbD0iI2U5ZTJkNiIvPjx0ZXh0IHg9IjIxMCIgeT0iMjg1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMiIgbGV0dGVyLXNwYWNpbmc9IjQiIGZpbGw9IiM0YTQ1NDIiPlBIT1RPPC90ZXh0Pjwvc3ZnPg==">
+      <div>
+        <p class="kicker" id="role-a">Technical Product Owner</p>
+        <h1 data-t="site.name">Syuzana Tevdoradze</h1>
+        <p class="role" id="role-b">AI and data products</p>
+      </div>
+    </div>
+
+    <p class="tagline" data-t="about.bio">Technical product owner: I take AI and data products from
+      the decision to a working system, and I count what they cost to run.</p>
+
+    <div class="actions">
+      <a class="cta" href="#write" data-t="hero.cta">Book a free call</a>
+      <a class="cta2" href="#" data-t="about.cv_label">Download CV (PDF)</a>
+    </div>
+    <p class="ctanote" data-ui="ctanote">20–40 minutes online, no charge.</p>
+
+    <ul class="channels">
+      <li><div class="row">
+        <span class="label" data-t="contact.email_label">Email</span>
+        <span class="value" id="email">name@example.com</span>
+        <button type="button" class="copy" id="copy" data-ui="copy">Copy</button>
+      </div></li>
+      <li><a href="#write"><span class="label" data-t="footer.linkedin_label">LinkedIn</span><span class="value">/in/your-handle</span><span class="go">&rarr;</span></a></li>
+      <li><a href="#write"><span class="label" data-t="footer.telegram_label">Telegram</span><span class="value">@your-handle</span><span class="go">&rarr;</span></a></li>
+      <li><a href="#write"><span class="label" data-t="footer.github_label">GitHub</span><span class="value">@your-handle</span><span class="go">&rarr;</span></a></li>
+      <li><a href="#write"><span class="label" data-t="footer.channel_label">Channel</span><span class="value" data-t="footer.channel_title">The channel: «I accept the terms»</span><span class="go">&rarr;</span></a></li>
+    </ul>
+
+    <div class="vcard">
+      <div class="qr" id="qr"><span class="pending">QR</span></div>
+      <p><b data-ui="qrTitle">Scan to save my contact</b><span data-ui="qrNote">Opens a vCard on the
+        phone — no typing. Useful when this page is on a screen someone else is looking at.</span></p>
+    </div>
+  </header>
+
+
+  <section>
+    <h2 data-t="experience.title">Experience</h2>
+    <p class="aside" data-t="experience.types">Most often this is computer vision and NLP in production.</p>
+    <ul class="results" id="results"></ul>
+    <p class="aside" data-t="experience.intro">A few results from recent years.</p>
+  </section>
+
+
+  <section>
+    <h2 data-t="pricing.title">Pricing</h2>
+    <p data-t="pricing.intro">The rate is from €100 an hour.</p>
+    <div class="tablewrap"><table><thead><tr id="cols"></tr></thead><tbody id="rows"></tbody></table></div>
+    <p class="aside" data-t="pricing.note">The final sum is fixed in a written proposal.</p>
+  </section>
+
+  <section id="write">
+    <h2 data-t="contact.title">Contact</h2>
+    <p data-t="contact.body">Send me a couple of lines about the task.</p>
+    <form id="enquiry" novalidate>
+      <div><label for="f-name" data-t="contact.form_name">Name</label><input id="f-name" name="name" type="text" autocomplete="name"></div>
+      <div><label for="f-email" data-t="contact.form_email">Email</label><input id="f-email" name="email" type="email" autocomplete="email"></div>
+      <div><label for="f-msg" data-t="contact.form_message">Briefly, what’s the situation?</label><textarea id="f-msg" name="message"></textarea></div>
+      <button type="submit" data-t="contact.form_send">Send</button>
+      <p class="sent" id="f-ok" hidden data-t="contact.form_ok">Thank you.</p>
+    </form>
+    <div class="closing">
+      <a class="cta closing-cta" href="#write" data-t="hero.cta">Book a free call</a>
+      <p class="ctanote" data-t="hero.note">A first consultation, 20–40 minutes online.</p>
+    </div>
+  </section>
+
+  <footer>
+    <ul class="fcontacts">
+      <li><a href="#write" data-t="contact.email_label">Email</a></li>
+      <li><a href="#write" data-t="footer.linkedin_label">LinkedIn</a></li>
+      <li><a href="#write" data-t="footer.telegram_label">Telegram</a></li>
+      <li><a href="#write" data-t="footer.github_label">GitHub</a></li>
+      <li><a href="#write" data-t="footer.channel_label">Channel</a></li>
+    </ul>
+    <p class="copyright" id="copyright">© 2026 Syuzana Tevdoradze</p>
+  </footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+var DATA = {"en":{"site.name":"Syuzana Tevdoradze","site.role":"Technical Product Owner · AI and data products","hero.title":"Strategy and growth of AI products","hero.lead":"I'm a product lead with a technical background. I work on AI and data products: set priorities, assess the economics and the technical constraints, and drive delivery together with the team. I usually start with focus: the product's function, the main pain, the market and the segment. Then the numbers: will the product pay back, the goals (OKR/KPI) and the roadmap. On that basis the founder decides whether to launch, grow or stop.","hero.cta":"Book a free call","hero.note":"A first consultation, 20–40 minutes online: you describe the task, I say how I can help and whether you need me at all.","about.bio":"I'm a product lead with a technical background. I help find the product's focus and decide whether it is worth doing. I research its value, the market, the audience and the competition. I work out whether the product pays back, and define how it should be built. I write the growth strategy and see development through to launch.","about.cv_label":"Download CV (PDF)","experience.title":"Experience","experience.intro":"A few results from recent years. Companies are not named; details are in the CV.","experience.types":"Most often this is computer vision and NLP in production, data platforms, legacy systems and the economics of early-stage AI products.","process.title":"How it works","pricing.title":"Pricing","pricing.intro":"The rate is **from €100 an hour**, single tasks from two hours. Project scope is estimated in hours up front and fixed in writing.","pricing.note":"The final sum, scope and timeline are fixed in a written proposal after the first consultation. At the agreed scope the sum doesn't change. The proposal states whether any taxes are added.","contact.title":"Contact","contact.body":"Send me a couple of lines about the task; I reply within two working days. Or book the free first consultation straight away.","contact.booking_label":"Book the free consultation","contact.email_label":"Email","contact.form_title":"Or briefly, right here","contact.form_name":"Name","contact.form_email":"Email","contact.form_message":"Briefly, what's the situation?","contact.form_send":"Send","contact.form_ok":"Thank you. I'll reply within two working days.","footer.linkedin_label":"LinkedIn","footer.github_label":"GitHub","footer.telegram_label":"Telegram","footer.channel_label":"Telegram channel","footer.channel_title":"The channel: «I accept the terms»","footer.channel_line":"A channel on data ethics and product analysis.","results":[{"what":"AI monitoring for greenhouses","text":"of more than ten detection models we kept the four that worked and rebuilt labelling. Average production accuracy went from 0.6 to 0.9, manual annotation fell by about 95%."},{"what":"Multi-tenant infrastructure","text":"a move to shared services cut cloud cost per customer by roughly 10x and turned the unit economics positive."},{"what":"Government analytics","text":"an NLP system for 200–250 thousand citizen requests a year, doing classification, entity extraction and routing. Processing became about 5x faster, with a person making the final call."},{"what":"Mobility data","text":"moving from row-based to vector-based storage took a report from about three days to an hour and a half."}],"principles":["Before we start, we write down what will count as failure.","In the report I mark separately what the data confirms and what remains an assumption."],"cols":["Format","Scope","Duration"],"rows":[["First consultation","20–40 minutes, free","–"],["Consultation","1 hour, €150","within a week"],["Consultation with a written review","from 3 hours, from €350","within a week"],["Single task","from 2 hours","by agreement"],["Audit of a live AI product","from 20 hours","1–2 weeks"],["Assessment of a new product or direction","from 30 hours","2–4 weeks"],["Part-time product lead","4 or 8 days a month","from 1 month"],["Full time","full days","on request"]]},"ru":{"site.name":"Сюзана Тевдорадзе","site.role":"Technical Product Owner · AI и дата-продукты","hero.title":"Стратегия и развитие AI-продуктов","hero.lead":"Я продакт-лид с техническим бэкграундом. Работаю с AI-продуктами и продуктами на данных: определяю приоритеты, оцениваю экономику и технические ограничения, веду реализацию вместе с командой. Обычно начинаю с фокуса: функция продукта, основная боль, рынок и сегмент. Дальше расчёт, окупится ли продукт, цели (OKR/KPI) и роадмап. На этом основании основатель принимает решение о запуске, развитии или остановке.","hero.cta":"Записаться бесплатно","hero.note":"Первая консультация, 20–40 минут онлайн: вы рассказываете задачу, я говорю, чем могу помочь и нужна ли вам вообще.","about.bio":"Я руководитель продукта с техническим опытом. Помогаю найти фокус продукта и понять, стоит ли его делать. Исследую ценность, рынок, аудиторию и конкурентов. Считаю, окупится ли продукт, и определяю, каким он должен быть технически. Составляю стратегию развития и сопровождаю разработку до запуска.","about.cv_label":"Скачать CV (PDF)","experience.title":"Опыт","experience.intro":"Несколько результатов последних лет. Компании не называю, подробности в CV.","experience.types":"Чаще всего это компьютерное зрение и NLP в production, дата-платформы, легаси-системы и экономика AI-продуктов на ранней стадии.","process.title":"Как это устроено","pricing.title":"Цены","pricing.intro":"Ставка **от €100 в час**, отдельные задачи от двух часов. Объём проекта оцениваю в часах заранее и фиксирую письменно.","pricing.note":"Итоговую сумму, объём и срок фиксируем в письменном предложении после первой консультации. При согласованном объёме сумма не меняется. В предложении указано, добавляются ли налоги.","contact.title":"Контакты","contact.body":"Напишите пару строк о задаче, отвечу в течение двух рабочих дней. Или сразу запишитесь на бесплатную первую консультацию.","contact.booking_label":"Записаться на бесплатную консультацию","contact.email_label":"Почта","contact.form_title":"Или коротко здесь","contact.form_name":"Имя","contact.form_email":"Email","contact.form_message":"Коротко о ситуации","contact.form_send":"Отправить","contact.form_ok":"Спасибо. Отвечу в течение двух рабочих дней.","footer.linkedin_label":"LinkedIn","footer.github_label":"GitHub","footer.telegram_label":"Telegram","footer.channel_label":"Telegram-канал","footer.channel_title":"Канал «Принимаю условия»","footer.channel_line":"Канал про этику данных и продуктовый анализ.","results":[{"what":"AI-мониторинг для теплиц","text":"из более чем десяти моделей оставили четыре рабочие, перестроили разметку. Средняя точность в production выросла с 0.6 до 0.9, ручной разметки стало меньше примерно на 95%."},{"what":"Мультитенантная инфраструктура","text":"после перехода на общие сервисы облачные расходы на клиента снизились примерно в 10 раз, экономика стала положительной."},{"what":"Государственная аналитика","text":"NLP-система для 200–250 тысяч обращений в год, которая делает классификацию, извлечение сущностей и маршрутизацию. Обработка ускорилась примерно в 5 раз, итоговое решение осталось за человеком."},{"what":"Данные о мобильности","text":"после перехода с построчного хранения на векторное отчёт, который строился около трёх дней, стал строиться за полтора часа."}],"principles":["До старта записываем, что будем считать неудачей.","В отчёте отдельно отмечаю, что подтверждено данными, а что остаётся предположением."],"cols":["Формат","Объём","Срок"],"rows":[["Первая консультация","20–40 минут, бесплатно","–"],["Консультация","1 час, €150","в течение недели"],["Консультация с письменным разбором","от 3 часов, от €350","в течение недели"],["Отдельная задача","от 2 часов","по договорённости"],["Аудит действующего AI-продукта","от 20 часов","1–2 недели"],["Оценка нового продукта или направления","от 30 часов","2–4 недели"],["Продакт-лид на частичную занятость","4 или 8 дней в месяц","от 1 месяца"],["Полная занятость","полный день","по запросу"]]}};
+
+
+/* Strings the page needs that the content model does not have yet. */
+var UI = {
+ "en": {
+  "photo": "Photo",
+  "copy": "Copy",
+  "copied": "Copied",
+  "selected": "Selected",
+  "whatIDo": "What I do",
+  "ctanote": "20–40 minutes online, no charge.",
+  "qrTitle": "Scan to save my contact",
+  "qrNote": "Opens a vCard on the phone, no typing needed. Useful when this page is on a screen someone else is looking at.",
+  "placeholders": "Every contact value on this page is a placeholder. The real handles and CV live in D1 and R2, set from the admin panel — never in git. File downloads do not run inside this preview."
+ },
+ "ru": {
+  "photo": "Фото",
+  "copy": "Копировать",
+  "copied": "Скопировано",
+  "selected": "Выделено",
+  "whatIDo": "Чем занимаюсь",
+  "ctanote": "20–40 минут онлайн, бесплатно.",
+  "qrTitle": "Отсканируйте, чтобы сохранить контакт",
+  "qrNote": "Открывает vCard на телефоне, ничего не нужно набирать. Полезно, когда страницу видят на чужом экране.",
+  "placeholders": "Все контакты на странице — заглушки. Настоящие адреса и CV лежат в D1 и R2 и задаются из админки, в git их нет. Скачивание файлов внутри этого превью не работает."
+ }
+};
+
+var lang = 'en';
+
+function fill(id, html) { var el = document.getElementById(id); if (el) el.innerHTML = html; }
+function esc(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function render(l) {
+  var t = DATA[l], u = UI[l];
+  lang = l;
+  document.documentElement.lang = l;
+
+  document.querySelectorAll('[data-t]').forEach(function (el) {
+    var v = t[el.getAttribute('data-t')];
+    if (v !== undefined) el.textContent = v;
+  });
+  document.querySelectorAll('[data-ui]').forEach(function (el) {
+    var v = u[el.getAttribute('data-ui')];
+    if (v !== undefined) el.textContent = v;
+  });
+
+  var role = t['site.role'].split('·');
+  document.getElementById('role-a').textContent = role[0].trim();
+  document.getElementById('role-b').textContent = (role[1] || '').trim();
+  document.getElementById('portrait').alt = t['site.name'];
+  document.getElementById('copyright').textContent = '\u00a9 2026 ' + t['site.name'];
+
+  fill('results', t.results.map(function (r) {
+    var txt = r.text.charAt(0).toUpperCase() + r.text.slice(1);
+    return '<li><span class="what">' + esc(r.what) + '</span><p>' + esc(txt) + '</p></li>';
+  }).join(''));
+
+  fill('principles', t.principles.map(function (p) {
+    return '<li>' + esc(p) + '</li>';
+  }).join(''));
+
+  fill('cols', t.cols.map(function (c) {
+    return '<th scope="col">' + esc(c) + '</th>';
+  }).join(''));
+
+  fill('rows', t.rows.map(function (r) {
+    return '<tr>' + r.map(function (c) { return '<td>' + esc(c) + '</td>'; }).join('') + '</tr>';
+  }).join(''));
+
+  document.getElementById('lang-en').setAttribute('aria-pressed', String(l === 'en'));
+  document.getElementById('lang-ru').setAttribute('aria-pressed', String(l === 'ru'));
+  try { localStorage.setItem('lang', l); } catch (e) {}
+}
+
+document.getElementById('lang-en').addEventListener('click', function () { render('en'); });
+document.getElementById('lang-ru').addEventListener('click', function () { render('ru'); });
+
+var saved = 'en';
+try { saved = localStorage.getItem('lang') || 'en'; } catch (e) {}
+render(DATA[saved] ? saved : 'en');
+
+document.getElementById('enquiry').addEventListener('submit', function (event) {
+  event.preventDefault();
+  document.getElementById('f-ok').hidden = false;
+});
+
+document.getElementById('copy').addEventListener('click', function () {
+  var button = this, node = document.getElementById('email');
+  var restore = function (key) {
+    button.textContent = UI[lang][key];
+    setTimeout(function () { button.textContent = UI[lang].copy; }, 1600);
+  };
+  var select = function () {
+    var range = document.createRange();
+    range.selectNodeContents(node);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    restore('selected');
+  };
+  try {
+    navigator.clipboard.writeText(node.textContent.trim())
+      .then(function () { restore('copied'); }, select);
+  } catch (e) { select(); }
+});
+
+var vcard = [
+  'BEGIN:VCARD', 'VERSION:3.0',
+  'N:Tevdoradze;Syuzana;;;', 'FN:Syuzana Tevdoradze',
+  'TITLE:Technical Product Owner',
+  'EMAIL;TYPE=INTERNET:name@example.com',
+  'URL:https://example.com', 'NOTE:AI and data products',
+  'END:VCARD'
+].join('\r\n');
+
+var box = document.getElementById('qr');
+if (window.QRCode) {
+  box.innerHTML = '';
+  new QRCode(box, {
+    text: vcard, width: 188, height: 188,
+    colorDark: '#1e1a19', colorLight: '#f3eee6',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+} else {
+  box.querySelector('.pending').textContent = 'QR';
+}
+</script>
