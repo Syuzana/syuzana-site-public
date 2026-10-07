@@ -10,7 +10,8 @@
 - Display the Telegram channel handle as a link and support personal Telegram links in
   the contact list and footer.
 
-Production delivery and the personal Telegram value await owner configuration.
+Personal Telegram is configured in the contact list and footer.
+Production delivery awaits Apps Script setup and authorization.
 
 ## 2.0.0
 
