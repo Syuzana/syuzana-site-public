@@ -84,7 +84,8 @@ export const Layout: FC<PageProps> = ({ c, lang, path, title, description, photo
               image: photo,
               email: c.value("contacts.email") ? `mailto:${c.value("contacts.email")}` : undefined,
               sameAs: [link(c, "contacts.linkedin"), link(c, "contacts.github"), link(c, "contacts.channel")].filter(Boolean),
-            }),
+              // A "<" inside owner text would otherwise close this script element.
+            }).replace(/</g, "\\u003c"),
           }}
         />
         <link rel="preload" href="/fonts/pt-serif-700-cyrillic.woff2" as="font" type="font/woff2" crossorigin="anonymous" />

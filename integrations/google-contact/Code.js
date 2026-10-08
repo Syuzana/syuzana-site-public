@@ -1,6 +1,6 @@
 /** Contact capture runs as the site owner. Configuration stays in Script Properties. */
 const CONTACT_HEADERS = ['ID', 'Created at', 'Name', 'Email', 'Message', 'Language', 'Source', 'Email sent at', 'Last error'];
-const CONTACT_SHEET_NAME = 'Messages';
+const CONTACT_SHEET_NAME = 'Applications';
 const CONTACT_LOCK_MS = 5000;
 const CONTACT_LIMITS = { name: 120, email: 254, message: 4000 };
 const CONTACT_RETRY_BATCH = 10;

@@ -95,13 +95,22 @@ export async function deliverContact(env: ContactEnv, message: ContactMessage): 
   const url = env.CONTACT_WEBHOOK_URL?.trim();
   if (!url || !contactEnabled(env)) return { delivered: false, status: 503 };
   try {
-    const response = await fetch(url, {
+    // Apps Script answers 302 to a one-off result URL. Following that automatically
+    // re-issues the POST, which the result endpoint refuses with 405, so the hop is
+    // taken by hand as the GET it is meant to be. One hop only: the script never chains.
+    const posted = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...message, token: env.CONTACT_WEBHOOK_SECRET?.trim() }),
-      redirect: "follow", // Apps Script answers with a redirect to the result
+      redirect: "manual",
       signal: AbortSignal.timeout(DELIVERY_TIMEOUT_MS),
     });
+    let response = posted;
+    if (posted.status >= 300 && posted.status < 400) {
+      const location = posted.headers.get("location");
+      if (!location) return { delivered: false, status: 502 };
+      response = await fetch(location, { method: "GET", signal: AbortSignal.timeout(DELIVERY_TIMEOUT_MS) });
+    }
     if (!response.ok) return { delivered: false, status: response.status };
     const receipt: unknown = await response.json();
     const delivered = typeof receipt === "object" && receipt !== null &&

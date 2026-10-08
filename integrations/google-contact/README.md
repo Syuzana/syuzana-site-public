@@ -13,7 +13,7 @@ notification on retry.
 
 ## Google Setup
 
-1. Create a private spreadsheet with a tab named `Messages`. Set the first row to:
+1. Create a private spreadsheet with a tab named `Applications`. Set the first row to:
    `ID | Created at | Name | Email | Message | Language | Source | Email sent at | Last error`.
 2. Create an Apps Script project and copy `Code.js` and `appsscript.json` into it.
 3. In Project Settings, set Script Properties:

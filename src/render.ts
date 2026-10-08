@@ -32,7 +32,8 @@ function unescapeHtml(text: string): string {
 export function safeUrl(url: string): string | null {
   const trimmed = url.trim();
   if (/^(https?:\/\/|mailto:)/i.test(trimmed)) return trimmed;
-  if (trimmed.startsWith("/") && !trimmed.startsWith("//")) return trimmed;
+  // A backslash after the slash is scheme-relative to a browser: "/\\evil.com" resolves off-site.
+  if (/^\/(?![\/\\])/.test(trimmed)) return trimmed;
   return null;
 }
 

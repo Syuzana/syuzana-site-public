@@ -4,7 +4,7 @@ import type { Content } from "./content";
 
 /** Escape the five characters vCard treats as structure. */
 function esc(value: string): string {
-  return value.replace(/\\/g, "\\\\").replace(/;/g, "\;").replace(/,/g, "\\,").replace(/\n/g, "\\n");
+  return value.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\n/g, "\\n");
 }
 
 /**
