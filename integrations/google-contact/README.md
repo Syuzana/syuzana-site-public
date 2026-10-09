@@ -21,8 +21,8 @@ notification on retry.
    - `CONTACT_RECIPIENT`: the owner’s notification email
    - `CONTACT_WEBHOOK_SECRET`: a random shared token
 4. Run `authorizeContactDelivery` from the editor.
-   Authorize spreadsheet access, mail sending and the retry trigger for the owner’s
-   account.
+   Authorize spreadsheet access, mail sending and both time-based triggers for the
+   owner’s account.
 5. Deploy a web app: execute as the owner, access **Anyone**. The shared token protects
    writes; the URL and token are never sent to visitors.
 6. Set Worker secrets `CONTACT_WEBHOOK_URL` (the deployed `/exec` URL) and
@@ -33,6 +33,23 @@ While sending is unavailable, it offers the owner’s configured email and Teleg
 Test a submission through the site, then verify its single row, its `Email sent at`
 value, and the notification in the owner’s mailbox.
 Retry the same ID to verify deduplication.
+
+## Abuse Watch
+
+The scarce resource is the consumer `MailApp` quota, roughly 100 messages a day. It is
+not bandwidth that takes the form down: once the quota is gone, every real visitor sees
+an error until it resets, because the Worker acknowledges success only on a mail receipt.
+Cloudflare's free plan raises no alert for this, so `contactWatch` does, hourly.
+
+It emails the owner once a day when submissions in the last 24 hours exceed
+`CONTACT_WATCH.dailyRows`, or when fewer than `CONTACT_WATCH.quotaFloor` messages remain.
+The floor is deliberately well above zero: the alert spends a message from the very quota
+it reports, so it has to fire while sending still works. `CONTACT_ALERT_DATE` in Script
+Properties holds the day already alerted, and is claimed before the send so a failure
+cannot retry every hour.
+
+Treat an alert as the signal to act on `syusite-d7rv`, not as an incident in itself: a
+burst of genuine interest looks the same from here.
 
 ## Verification and Recovery
 

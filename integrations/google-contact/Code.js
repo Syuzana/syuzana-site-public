@@ -128,7 +128,48 @@ function retryContactMail() {
   }
 }
 
-/** Run once from the Apps Script editor to authorize mail/sheets and install retry delivery. */
+/**
+ * Hourly abuse watch. The form's scarce resource is the consumer MailApp quota (~100 a
+ * day), not bandwidth: once it is gone every real visitor sees an error until it resets.
+ * Cloudflare's free plan offers no alert for this, so the signal is raised here.
+ */
+const CONTACT_WATCH = { quotaFloor: 50, dailyRows: 15 };
+
+function contactWatch() {
+  const config = contactConfig();
+  const properties = PropertiesService.getScriptProperties();
+  const today = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  if (properties.getProperty('CONTACT_ALERT_DATE') === today) return;
+
+  const quota = MailApp.getRemainingDailyQuota();
+  const since = Date.now() - 24 * 60 * 60 * 1000;
+  const sheet = contactSheet(config);
+  const lastRow = sheet.getLastRow();
+  const recent = lastRow > 1 ? sheet.getRange(2, 2, lastRow - 1, 1).getValues().filter(function (row) {
+    return Date.parse(row[0]) >= since;
+  }).length : 0;
+
+  if (quota > CONTACT_WATCH.quotaFloor && recent < CONTACT_WATCH.dailyRows) return;
+
+  // The alert spends a message from the quota it is warning about, so it fires once a day.
+  // The date is claimed before sending: a throw here must not retry every hour.
+  properties.setProperty('CONTACT_ALERT_DATE', today);
+  try {
+    MailApp.sendEmail({
+      to: config.recipient,
+      subject: 'syuzana.com: contact form is being hit hard',
+      body: 'Submissions in the last 24h: ' + recent + '\n' +
+        'MailApp messages left today: ' + quota + '\n\n' +
+        'Alerts above ' + CONTACT_WATCH.dailyRows + ' submissions or below ' +
+        CONTACT_WATCH.quotaFloor + ' remaining messages.\n' +
+        'If this is abuse rather than real interest, bead syusite-d7rv holds the plan.',
+    });
+  } catch (error) {
+    console.error('contact_watch_alert_failed');
+  }
+}
+
+/** Run once from the Apps Script editor to authorize mail/sheets and install both triggers. */
 function authorizeContactDelivery() {
   const config = contactConfig();
   contactSheet(config);
@@ -137,4 +178,8 @@ function authorizeContactDelivery() {
     return trigger.getHandlerFunction() === 'retryContactMail';
   });
   if (!installed) ScriptApp.newTrigger('retryContactMail').timeBased().everyMinutes(5).create();
+  const watching = ScriptApp.getProjectTriggers().some(function (trigger) {
+    return trigger.getHandlerFunction() === 'contactWatch';
+  });
+  if (!watching) ScriptApp.newTrigger('contactWatch').timeBased().everyHours(1).create();
 }
