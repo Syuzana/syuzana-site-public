@@ -32,11 +32,10 @@ Full rationale and the cost breakdown are in
 The interest here is the method, not just the result:
 
 - **Spec-driven.** Every part was specified before it was coded — see
-  [`specs/`](specs/): architecture, design system, content plan, and the testing plan.
+  [`specs/`](specs/): architecture, design system, and the testing plan.
   The design is derived from a conference talk, so the look carries the positioning.
-- **Decisions are recorded, not assumed.** `knowledge/decisions.md` logs each choice
-  with its status (assumption / proposal / decision), who proposed it, and what verified
-  it.
+- **Decisions are recorded, not assumed.** Each choice is logged with its status
+  (assumption / proposal / decision), who proposed it, and what verified it.
 - **Tracked as beads.** Work is planned as a dependency-ordered epic of small,
   acceptance-tested tasks, each carrying its own model/effort binding.
 - **Multi-agent, deliberately.** A coordinator plans and writes the specs; specialist
@@ -53,9 +52,8 @@ The interest here is the method, not just the result:
 ```
 src/              Worker: routes, SSR templates, admin, styles
 content/seed/     RU + EN marketing copy (contact values are placeholders)
-specs/            architecture · design-system · content-plan · testing · repo-and-publishing
-knowledge/        decisions log and method notes
-scripts/          publish-public.sh (allowlist copy into this public repo)
+specs/            architecture · design-system · testing · mockup
+scripts/          build helpers (seed data, favicon)
 .github/          CI (typecheck · unit · integration · E2E)
 ```
 
@@ -98,8 +96,6 @@ Upload the CV and photo, and set the contact links and booking URL, in `/admin`.
 No secrets, CV, photo, or contact details live in this repository.
 At runtime those are held in R2, D1, and Cloudflare Worker secrets.
 The admin panel is reachable only to the owner’s verified Google identity.
-See [specs/repo-and-publishing.md](specs/repo-and-publishing.md) for how the public view
-is kept clean.
 
 ## License
 
